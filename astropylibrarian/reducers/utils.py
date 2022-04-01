@@ -250,26 +250,22 @@ def iter_nbcollection_content_elements(
 
     Notes
     -----
-    This method yields the child elements of two kinds of wrapper elements:
+    This method yields elements of two kinds:
 
-    - The div with a ``jp-RenderedHtmlCommon`` class inside the
-      ``div.jp-Cell-inputWrapper``. These are prose cells.
-      Elements yielded from this wrapper include headers (``h1``, ``h2``, etc)
-      and content like ``p`` tags.
-    - The div with a ``jp-CodeMirrorEditor`` class inside ``div.jp-CodeCell``.
-      These are source code content cells, without the outputs that we don't
-      index.
+    - Child elements of the div with a ``jp-RenderedHtmlCommon`` class. These
+      are prose cells. Elements yielded from this wrapper include headers
+      (``h1``, ``h2``, etc) and content like ``p`` tags.
+    - The div with a ``jp-CodeMirrorEditor`` class. These are source code
+      content cells, without the outputs that we don't index.
     """
-    for element in root_element:
-        if "jp-Cell-inputWrapper" in element.classes:
-            parents = element.cssselect(".jp-RenderedHTMLCommon")
-            for parent in parents:
-                for content_element in parent:
-                    yield content_element
-        elif "jp-CodeCell" in element.classes:
-            parents = element.cssselect(".jp-CodeMirrorEditor")
-            for parent in parents:
-                for content_element in parent:
-                    yield content_element
+    selector = ".jp-CodeMirrorEditor, .jp-RenderedHTMLCommon"
+    for element in root_element.cssselect(selector):
+        if element.tag == "div" and "jp-RenderedHTMLCommon" in element.classes:
+            # Prose content elements are child elements of
+            # jp-RenderedHTMLCommon
+            for child_element in element:
+                yield child_element
         else:
-            continue
+            # jp-CodeMirrorEditor's content is code, so no need to decompose
+            # into header elements for sectioning
+            yield element

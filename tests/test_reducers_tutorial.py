@@ -235,3 +235,28 @@ def test_nbcollection_coordinates_transform(
     ]
     assert len(reduced_tutorial.images) == 0  # all images are embedded here
     assert len(reduced_tutorial.sections) > 0
+
+
+def test_nbcollection_coordinates_transform_2022_03(
+    nbcollection_coordinates_transform_tutorial_2022_03: HtmlTestData,
+) -> None:
+    """Test with the nbcollection-generated
+    ""
+    dataset.
+    """
+    test_data = nbcollection_coordinates_transform_tutorial_2022_03
+
+    reduced_tutorial = ReducedNbcollectionTutorial(html_page=test_data)
+
+    assert reduced_tutorial.url == test_data.url
+    assert reduced_tutorial.h1 == (
+        "Astronomical Coordinates 2: "
+        "Transforming Coordinate Systems and Representations"
+    )
+    assert reduced_tutorial.authors == ["Adrian Price-Whelan"]
+    assert reduced_tutorial.keywords == [
+        "coordinates",
+        "OOP",
+    ]
+    assert len(reduced_tutorial.images) == 0  # all images are embedded here
+    assert len(reduced_tutorial.sections) > 0

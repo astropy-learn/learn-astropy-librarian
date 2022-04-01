@@ -63,6 +63,17 @@ def nbcollection_coordinates_transform_tutorial() -> HtmlTestData:
 
 
 @pytest.fixture(scope="session")
+def nbcollection_coordinates_transform_tutorial_2022_03() -> HtmlTestData:
+    """The nbcollection-generated Coordinates-Transform.html tutorial page,
+    newly reformatted as of 2022-03.
+    """
+    return HtmlTestData.from_test_path(
+        path="nbcollection-tutorials/2-Coordinates-Transforms-2022-03.html",
+        url="http://learn.astropy.org/tutorials/2-Coordinates-Transforms.html",
+    )
+
+
+@pytest.fixture(scope="session")
 def ccd_guide_index() -> HtmlTestData:
     """The ``ccd-guide/index.html`` page.
 

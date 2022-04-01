@@ -5,6 +5,7 @@ into search records.
 
 from __future__ import annotations
 
+from logging import getLogger
 from typing import TYPE_CHECKING, Any, Dict, Iterator, List, Type
 from urllib.parse import urljoin
 
@@ -27,13 +28,17 @@ __all__ = [
     "ReducedNbcollectionTutorial",
 ]
 
+logger = getLogger(__name__)
+
 
 def get_tutorial_reducer(html_page: HtmlPage) -> Type[ReducedTutorial]:
     """Get the reducer appropriate for the tutorial's structure."""
     doc = html_page.parse()
     if len(doc.cssselect(".jp-Notebook")) > 0:
+        logger.debug("Using nbcollection tutorial reducer")
         return ReducedNbcollectionTutorial
     else:
+        logger.debug("Using sphinx tutorial reducer")
         return ReducedSphinxTutorial
 
 
@@ -253,24 +258,28 @@ class ReducedNbcollectionTutorial(ReducedTutorial):
                 doc.cssselect("h1")[0].text_content().rstrip("¶").strip()
             )
         except IndexError:
+            logger.warning("Did not find h1")
             pass
 
         try:
             authors_paragraph = doc.cssselect("#Authors + p")[0]
             self._authors = self._parse_comma_list(authors_paragraph)
         except IndexError:
+            logger.warning("Did not find authors")
             pass
 
         try:
             keywords_paragraph = doc.cssselect("#Keywords + p")[0]
             self._keywords = self._parse_comma_list(keywords_paragraph)
         except IndexError:
+            logger.warning("Did not find keywords")
             pass
 
         try:
             summary_paragraph = doc.cssselect("#Summary + p")[0]
             self._summary = summary_paragraph.text_content().replace("\n", " ")
         except IndexError:
+            logger.warning("Did not find summary")
             pass
 
         image_elements = doc.cssselect("img")
@@ -283,6 +292,7 @@ class ReducedNbcollectionTutorial(ReducedTutorial):
 
         self._sections = []
         root_element = doc.cssselect(".jp-Notebook")[0]
+        logger.debug("Got root element %s", root_element)
         for s in iter_nbcollection_sections(
             root_element=root_element,
             base_url=html_page.url,
@@ -291,6 +301,9 @@ class ReducedNbcollectionTutorial(ReducedTutorial):
         ):
             if not self._is_ignored_section(s):
                 self._sections.append(s)
+            else:
+                logger.debug("Ignored section")
+        logger.debug("Found %s section in total", len(self._sections))
 
 
 def clean_content(x: str) -> str:
