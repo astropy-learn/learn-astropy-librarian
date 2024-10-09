@@ -8,50 +8,54 @@ on:
 
 jobs:
 
-  # lint:
-  #   runs-on: ubuntu-latest
+  lint: 
+    # could be re-implemented if desired
+    if: false
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938  # v4.2.0
-  #       with:
-  #         fetch-depth: 0 # full history for setuptools_scm
+    steps:
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938  # v4.2.0
+        with:
+          fetch-depth: 0 # full history for setuptools_scm
 
-  #     - name: Set up Python
-  #       uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3  # v5.2.0
-  #       with:
-  #         python-version: 3.12
+      - name: Set up Python
+        uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3  # v5.2.0
+        with:
+          python-version: 3.12
 
-      # - name: Run pre-commit
-      #   uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd  # v3.0.1
+      - name: Run pre-commit
+        uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd  # v3.0.1
 
-  # typing:
-  #   runs-on: ubuntu-latest
+  typing:
+    # could be re-implemented if desired
+    if: false
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938  # v4.2.0
-  #       with:
-  #         fetch-depth: 0 # full history for setuptools_scm
+    steps:
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938  # v4.2.0
+        with:
+          fetch-depth: 0 # full history for setuptools_scm
 
-  #     - name: Set up Python
-  #       uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3  # v5.2.0
-  #       with:
-  #         python-version: 3.12
+      - name: Set up Python
+        uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3  # v5.2.0
+        with:
+          python-version: 3.12
 
-  #     - name: Python install
-  #       run: |
-  #         python -m pip install --upgrade pip
-  #         pip install tox
+      - name: Python install
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox
 
-  #     - name: Cache tox environments
-  #       id: cache-tox
-  #       uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9  # v4.0.2
-  #       with:
-  #         path: .tox
-  #         key: tox-typing-${{ hashFiles('setup.cfg') }}-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('tox.ini') }}
+      - name: Cache tox environments
+        id: cache-tox
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9  # v4.0.2
+        with:
+          path: .tox
+          key: tox-typing-${{ hashFiles('setup.cfg') }}-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('tox.ini') }}
 
-      # - name: Run mypy
-      #   run: tox -e typing
-
+      - name: Run mypy
+        run: tox -e typing
+  
   test:
     runs-on: ubuntu-latest
 
