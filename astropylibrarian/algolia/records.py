@@ -16,7 +16,7 @@ from typing import TYPE_CHECKING, Any, Dict, Iterator, List, Optional
 from urllib.parse import urlparse, urlunparse
 
 from more_itertools import chunked
-from pydantic import UUID4, BaseModel, Field, HttpUrl, validator
+from pydantic.v1 import UUID4, BaseModel, Field, HttpUrl, validator
 
 if TYPE_CHECKING:
     from astropylibrarian.keywords import KeywordDb

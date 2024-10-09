@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Dict, Iterator, List, Optional
 from urllib.parse import urljoin, urlparse, urlunparse
 
-from pydantic import BaseModel, HttpUrl, validator
+from pydantic.v1 import BaseModel, HttpUrl, validator
 
 from astropylibrarian.algolia.records import GuideRecord
 from astropylibrarian.reducers.utils import iter_sphinx_sections
