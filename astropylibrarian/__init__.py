@@ -5,10 +5,8 @@ search database.
 
 __all__ = ("__version__",)
 
-from pkg_resources import DistributionNotFound, get_distribution
-
 try:
-    __version__ = get_distribution(__name__).version
-except DistributionNotFound:
+    from ._version import __version__ 
+except ImportError:
     # package is not installed
-    __version__ = "0.0.0"
+    __version__ = ""
