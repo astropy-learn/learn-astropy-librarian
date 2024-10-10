@@ -6,9 +6,6 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
-[project]
-name = "astropylibrarian"
-
 [tool.setuptools_scm]
 version_file = "astropylibrarian/_version.py"
 
