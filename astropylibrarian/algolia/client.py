@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 
     from algoliasearch.search_index_async import SearchIndexAsync
 
-AlgoliaIndexType = "SearchIndexAsync" | "MockAlgoliaIndex"
+AlgoliaIndexType = SearchIndexAsync | "MockAlgoliaIndex"
 """Type annotation alias supporting the return types of the `AlgoliaIndex` and
 `MockAlgoliaIndex` context managers.
 """
