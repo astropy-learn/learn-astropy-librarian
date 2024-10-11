@@ -6,22 +6,16 @@ dry-run operations.
 import logging
 import uuid
 from copy import deepcopy
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    AsyncIterator,
-    Iterator,
-    Type,
-)
+from types import TracebackType
+from typing import Any, AsyncIterator, Iterator, Type, Union
 
-from algoliasearch.search_client import SearchClient
+from algoliasearch.search.client import SearchClient
+from algoliasearch.search.models.batch_response import BatchResponse
+from algoliasearch.search.models.browse_params_object import BrowseParamsObject
+from algoliasearch.search.models.browse_response import BrowseResponse
+from algoliasearch.search.models.deleted_at_response import DeletedAtResponse
 
-if TYPE_CHECKING:
-    from types import TracebackType
-
-    from algoliasearch.search_index_async import SearchIndexAsync
-
-AlgoliaIndexType = SearchIndexAsync | "MockAlgoliaIndex"
+AlgoliaIndexType = Union["AlgoliaIndex", "MockAlgoliaIndex"]
 """Type annotation alias supporting the return types of the `AlgoliaIndex` and
 `MockAlgoliaIndex` context managers.
 """
@@ -73,12 +67,10 @@ class AlgoliaIndex(BaseAlgoliaIndex):
         Name of the Algolia index.
     """
 
-    async def __aenter__(self) -> SearchIndexAsync:
+    async def __aenter__(self) -> SearchClient:
         self._logger.debug("Opening algolia client")
-        self.algolia_client = SearchClient.create(self.app_id, self._key)
-        self._logger.debug("Initializing algolia index")
-        self.index = self.algolia_client.init_index(self.name)
-        return self.index
+        self.algolia_client = SearchClient(self.app_id, self._key)
+        return self.algolia_client
 
     async def __aexit__(
         self,
@@ -87,8 +79,23 @@ class AlgoliaIndex(BaseAlgoliaIndex):
         tb: TracebackType | None,
     ) -> None:
         self._logger.debug("Closing algolia client")
-        await self.algolia_client.close_async()
+        await self.algolia_client.close()
         self._logger.debug("Finished closing algolia client")
+
+    async def browse_objects_async(
+        self, browse_params: BrowseParamsObject
+    ) -> BrowseResponse:
+        return await self.algolia_client.browse_objects(
+            index_name=self.name, aggregator=None, browse_params=browse_params
+        )
+
+    async def save_objects_async(
+        self, objects: list[dict[str, Any]]
+    ) -> list[BatchResponse]:
+        return self.algolia_client.save_objects(self.name, objects)
+
+    async def delete_objects_async(self, objectids: list[str]) -> list[BatchResponse]:
+        return self.algolia_client.delete_objects(self.name, objectids)
 
 
 class MockAlgoliaIndex(BaseAlgoliaIndex):
@@ -141,8 +148,10 @@ class MockAlgoliaIndex(BaseAlgoliaIndex):
         for _ in range(5):
             yield {}
 
-    async def delete_objects_async(self, objectids: list[str]) -> list[str]:
-        return objectids
+    async def delete_objects_async(
+        self, objectids: list[str]
+    ) -> list[DeletedAtResponse]:
+        return [DeletedAtResponse(task_id=0, deleted_at="") for _ in objectids]
 
 
 class MockMultiResponse:

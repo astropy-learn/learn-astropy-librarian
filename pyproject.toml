@@ -16,7 +16,7 @@ classifiers = [
 dependencies = [
     "lxml",
     "cssselect",
-    "algoliasearch",
+    "algoliasearch>=4,<5",
     "aiohttp",
     "async_timeout",
     "PyYAML",
