@@ -3,8 +3,6 @@
 dry-run operations.
 """
 
-from __future__ import annotations
-
 import logging
 import uuid
 from copy import deepcopy
@@ -12,12 +10,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     AsyncIterator,
-    Dict,
     Iterator,
-    List,
-    Optional,
     Type,
-    Union,
 )
 
 from algoliasearch.search_client import SearchClient
@@ -27,8 +21,7 @@ if TYPE_CHECKING:
 
     from algoliasearch.search_index_async import SearchIndexAsync
 
-
-AlgoliaIndexType = Union["SearchIndexAsync", "MockAlgoliaIndex"]
+AlgoliaIndexType = "SearchIndexAsync" | "MockAlgoliaIndex"
 """Type annotation alias supporting the return types of the `AlgoliaIndex` and
 `MockAlgoliaIndex` context managers.
 """
@@ -89,9 +82,9 @@ class AlgoliaIndex(BaseAlgoliaIndex):
 
     async def __aexit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc: Optional[Exception],
-        tb: Optional[TracebackType],
+        exc_type: Type[BaseException] | None,
+        exc: Exception | None,
+        tb: TracebackType | None,
     ) -> None:
         self._logger.debug("Closing algolia client")
         await self.algolia_client.close_async()
@@ -117,30 +110,30 @@ class MockAlgoliaIndex(BaseAlgoliaIndex):
 
     async def __aenter__(self) -> "MockAlgoliaIndex":
         self._logger.debug("Creating mock Algolia index")
-        self._saved_objects: List[Dict] = []
+        self._saved_objects: list[dict] = []
         return self
 
     async def __aexit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc: Optional[Exception],
-        tb: Optional[TracebackType],
+        exc_type: Type[BaseException] | None,
+        exc: Exception | None,
+        tb: TracebackType | None,
     ) -> None:
         self._logger.debug("Closing MockAlgoliaIndex")
 
     async def save_objects_async(
         self,
-        objects: Union[List[Dict], Iterator[Dict]],
-        request_options: Optional[Dict[str, Any]] = None,
-    ) -> MockMultiResponse:
+        objects: list[dict] | Iterator[dict],
+        request_options: dict[str, Any] | None = None,
+    ) -> "MockMultiResponse":
         """Mock implementation of save_objects_async."""
         for obj in objects:
             self._saved_objects.append(deepcopy(obj))
         return MockMultiResponse()
 
     async def browse_objects_async(
-        self, search_settings: Dict[str, Any]
-    ) -> AsyncIterator[Dict[str, Any]]:
+        self, search_settings: dict[str, Any]
+    ) -> AsyncIterator[dict[str, Any]]:
         self._logger.debug("Got search settings %s", search_settings)
         # FIXME need to flesh out this mock:
         # - provide a way to seed data
@@ -148,7 +141,7 @@ class MockAlgoliaIndex(BaseAlgoliaIndex):
         for _ in range(5):
             yield {}
 
-    async def delete_objects_async(self, objectids: List[str]) -> List[str]:
+    async def delete_objects_async(self, objectids: list[str]) -> list[str]:
         return objectids
 
 
