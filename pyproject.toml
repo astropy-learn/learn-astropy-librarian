@@ -8,7 +8,7 @@ authors = [
 license = {text = "BSD 3-Clause License"}
 description = "The content crawler that supplies Astropy's web search."
 readme = {file = "README.rst", content-type = "text/x-rst"}
-requires-python = ">=3.7"
+requires-python = ">=3.11"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: BSD License",
@@ -16,9 +16,9 @@ classifiers = [
 dependencies = [
     "lxml",
     "cssselect",
-    "algoliasearch>=2.1.0,<3.0.0",
-    "aiohttp>=2.0,<4.0",
-    "async_timeout>=4.0.3",
+    "algoliasearch",
+    "aiohttp",
+    "async_timeout",
     "PyYAML",
     "pydantic",
     "typer",
