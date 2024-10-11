@@ -1,6 +1,5 @@
 [project]
 name = "astropy-librarian"
-provides = ["astropylibrarian"]
 authors = [
     {name = "J.Sick Codes Inc.", email = "hi@jsick.codes"},
     {name = "Jeff Jennings", email = "jeffjennings@users.noreply.github.com"},
@@ -8,7 +7,7 @@ authors = [
 ]
 license = {text = "BSD 3-Clause License"}
 description = "The content crawler that supplies Astropy's web search."
-readme = {file = ["README.rst", "LICENSE.rst"], content-type = "text/x-rst"}
+readme = {file = "README.rst", content-type = "text/x-rst"}
 requires-python = ">=3.7"
 classifiers = [
     "Development Status :: 3 - Alpha",
