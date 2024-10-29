@@ -30,7 +30,7 @@ async def delete_root_url(
 
     logger.debug("Found %d objects for deletion", len(object_ids))
 
-    responses = await algolia_index.delete_objects_async(object_ids)
+    responses = await algolia_index.delete_objects(object_ids)
     logger.debug("Algolia response:\n%s", responses)
 
     logger.info("Deleted %d objects", len(object_ids))
@@ -47,5 +47,5 @@ async def search_for_records(
     obj = BrowseParamsObject(
         filters=filters, attributes_to_retrieve=["root_url"], attributes_to_highlight=[]
     )
-    async for result in algolia_index.browse_objects_async(obj):
+    async for result in algolia_index.browse_objects(obj):
         yield result
