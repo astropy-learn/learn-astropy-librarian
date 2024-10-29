@@ -82,19 +82,19 @@ class AlgoliaIndex(BaseAlgoliaIndex):
         await self.algolia_client.close()
         self._logger.debug("Finished closing algolia client")
 
-    async def browse_objects_async(
+    async def browse_objects(
         self, browse_params: BrowseParamsObject
     ) -> BrowseResponse:
         return await self.algolia_client.browse_objects(
             index_name=self.name, aggregator=None, browse_params=browse_params
         )
 
-    async def save_objects_async(
+    async def save_objects(
         self, objects: list[dict[str, Any]]
     ) -> list[BatchResponse]:
         return self.algolia_client.save_objects(self.name, objects)
 
-    async def delete_objects_async(self, objectids: list[str]) -> list[BatchResponse]:
+    async def delete_objects(self, objectids: list[str]) -> list[BatchResponse]:
         return self.algolia_client.delete_objects(self.name, objectids)
 
 
@@ -128,17 +128,17 @@ class MockAlgoliaIndex(BaseAlgoliaIndex):
     ) -> None:
         self._logger.debug("Closing MockAlgoliaIndex")
 
-    async def save_objects_async(
+    async def save_objects(
         self,
         objects: list[dict] | Iterator[dict],
         request_options: dict[str, Any] | None = None,
     ) -> "MockMultiResponse":
-        """Mock implementation of save_objects_async."""
+        """Mock implementation of save_objects."""
         for obj in objects:
             self._saved_objects.append(deepcopy(obj))
         return MockMultiResponse()
 
-    async def browse_objects_async(
+    async def browse_objects(
         self, search_settings: dict[str, Any]
     ) -> AsyncIterator[dict[str, Any]]:
         self._logger.debug("Got search settings %s", search_settings)
@@ -148,7 +148,7 @@ class MockAlgoliaIndex(BaseAlgoliaIndex):
         for _ in range(5):
             yield {}
 
-    async def delete_objects_async(
+    async def delete_objects(
         self, objectids: list[str]
     ) -> list[DeletedAtResponse]:
         return [DeletedAtResponse(task_id=0, deleted_at="") for _ in objectids]

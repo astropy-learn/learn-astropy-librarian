@@ -170,7 +170,7 @@ async def index_tutorial(
 
     saved_object_ids: List[str] = []
     try:
-        response = await algolia_index.save_objects_async(records)
+        response = await algolia_index.save_objects(records)
     except RequestException as e:
         logger.error(
             "Error saving objects for tutorial %s:\n%s",
