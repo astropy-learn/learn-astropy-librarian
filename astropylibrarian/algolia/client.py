@@ -82,16 +82,12 @@ class AlgoliaIndex(BaseAlgoliaIndex):
         await self.algolia_client.close()
         self._logger.debug("Finished closing algolia client")
 
-    async def browse_objects(
-        self, browse_params: BrowseParamsObject
-    ) -> BrowseResponse:
+    async def browse_objects(self, browse_params: BrowseParamsObject) -> BrowseResponse:
         return await self.algolia_client.browse_objects(
             index_name=self.name, aggregator=None, browse_params=browse_params
         )
 
-    async def save_objects(
-        self, objects: list[dict[str, Any]]
-    ) -> list[BatchResponse]:
+    async def save_objects(self, objects: list[dict[str, Any]]) -> list[BatchResponse]:
         return await self.algolia_client.save_objects(self.name, objects)
 
     async def delete_objects(self, objectids: list[str]) -> list[BatchResponse]:
@@ -148,9 +144,7 @@ class MockAlgoliaIndex(BaseAlgoliaIndex):
         for _ in range(5):
             yield {}
 
-    async def delete_objects(
-        self, objectids: list[str]
-    ) -> list[DeletedAtResponse]:
+    async def delete_objects(self, objectids: list[str]) -> list[DeletedAtResponse]:
         return [DeletedAtResponse(task_id=0, deleted_at="") for _ in objectids]
 
 
