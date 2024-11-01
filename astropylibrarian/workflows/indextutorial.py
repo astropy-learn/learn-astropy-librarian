@@ -179,7 +179,7 @@ async def index_tutorial(
         )
         return []
     for r in response:
-        _oids = r.get("object_ids", [])
+        _oids = r.object_ids
         assert isinstance(_oids, list)
         saved_object_ids.extend(_oids)
     logger.info(
