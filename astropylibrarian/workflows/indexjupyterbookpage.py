@@ -43,7 +43,7 @@ async def index_jupyterbook_page(
         "Indexing %d records for Jupyter Book page at %s", len(records), url
     )
     response = await algolia_index.save_objects(objects=records)
-    logger.debug("Algolia save_objects: %s", response.raw_responses)
+    # logger.debug("Algolia save_objects: %s", response.raw_responses)
 
     object_ids = [r["objectID"] for r in records]
 
