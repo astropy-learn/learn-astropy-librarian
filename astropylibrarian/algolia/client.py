@@ -67,10 +67,10 @@ class AlgoliaIndex(BaseAlgoliaIndex):
         Name of the Algolia index.
     """
 
-    async def __aenter__(self) -> SearchClient:
+    async def __aenter__(self) -> "AlgoliaIndex":
         self._logger.debug("Opening algolia client")
         self.algolia_client = SearchClient(self.app_id, self._key)
-        return self.algolia_client
+        return self
 
     async def __aexit__(
         self,
