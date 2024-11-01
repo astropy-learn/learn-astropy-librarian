@@ -92,10 +92,10 @@ class AlgoliaIndex(BaseAlgoliaIndex):
     async def save_objects(
         self, objects: list[dict[str, Any]]
     ) -> list[BatchResponse]:
-        return self.algolia_client.save_objects(self.name, objects)
+        return await self.algolia_client.save_objects(self.name, objects)
 
     async def delete_objects(self, objectids: list[str]) -> list[BatchResponse]:
-        return self.algolia_client.delete_objects(self.name, objectids)
+        return await self.algolia_client.delete_objects(self.name, objectids)
 
 
 class MockAlgoliaIndex(BaseAlgoliaIndex):
