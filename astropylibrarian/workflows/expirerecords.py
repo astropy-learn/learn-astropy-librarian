@@ -6,8 +6,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from algoliasearch.search_client import SearchClient
-from algoliasearch.responses import BrowseParamsObject
+from algoliasearch.search.models.browse_params_object import BrowseParamsObject
 
 from astropylibrarian.algolia.client import escape_facet_value
 
