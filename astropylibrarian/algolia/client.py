@@ -9,7 +9,10 @@ from copy import deepcopy
 from types import TracebackType
 from typing import Any, AsyncIterator, Iterator, Type, Union
 from algoliasearch.search.client import SearchClient
-from algoliasearch.search.models import BatchResponse, BrowseParamsObject, BrowseResponse, DeletedAtResponse
+from algoliasearch.search.models.batch_response import BatchResponse
+from algoliasearch.search.models.browse_params_object import BrowseParamsObject
+from algoliasearch.search.models.browse_response import BrowseResponse
+from algoliasearch.search.models.deleted_at_response import DeletedAtResponse
 
 
 AlgoliaIndexType = Union["AlgoliaIndex", "MockAlgoliaIndex"]
