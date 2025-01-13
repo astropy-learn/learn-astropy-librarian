@@ -6,7 +6,8 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from algoliasearch.search.models.browse_params_object import BrowseParamsObject
+from algoliasearch.search_client import SearchClient
+from algoliasearch.responses import BrowseParamsObject
 
 from astropylibrarian.algolia.client import escape_facet_value
 
@@ -36,7 +37,7 @@ async def expire_old_records(
         attributes_to_highlight=[],
     )
     old_object_ids: List[str] = []
-    async for r in algolia_index.browse_objects(obj):
+    for r in await algolia_index.browse_objects(obj):
         # Double check that we're deleting the right things.
         if r["root_url"] != root_url:
             logger.warning("root_url does not match: %s", r["root_url"])
