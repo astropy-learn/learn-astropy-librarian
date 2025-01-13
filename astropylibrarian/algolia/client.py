@@ -8,12 +8,9 @@ import uuid
 from copy import deepcopy
 from types import TracebackType
 from typing import Any, AsyncIterator, Iterator, Type, Union
+from algoliasearch.search_client import SearchClient
+from algoliasearch.search.models import BatchResponse, BrowseParamsObject, BrowseResponse, DeletedAtResponse
 
-from algoliasearch.search.client import SearchClient
-from algoliasearch.search.models.batch_response import BatchResponse
-from algoliasearch.search.models.browse_params_object import BrowseParamsObject
-from algoliasearch.search.models.browse_response import BrowseResponse
-from algoliasearch.search.models.deleted_at_response import DeletedAtResponse
 
 AlgoliaIndexType = Union["AlgoliaIndex", "MockAlgoliaIndex"]
 """Type annotation alias supporting the return types of the `AlgoliaIndex` and
@@ -69,7 +66,7 @@ class AlgoliaIndex(BaseAlgoliaIndex):
 
     async def __aenter__(self) -> "AlgoliaIndex":
         self._logger.debug("Opening algolia client")
-        self.algolia_client = SearchClient(self.app_id, self._key)
+        self.algolia_client = SearchClient.create(self._app_id, self._key)
         return self
 
     async def __aexit__(
@@ -84,14 +81,16 @@ class AlgoliaIndex(BaseAlgoliaIndex):
 
     async def browse_objects(self, browse_params: BrowseParamsObject) -> BrowseResponse:
         return await self.algolia_client.browse_objects(
-            index_name=self.name, aggregator=None, browse_params=browse_params
+            self._index_name, browse_params
         )
 
-    async def save_objects(self, objects: list[dict[str, Any]]) -> list[BatchResponse]:
-        return await self.algolia_client.save_objects(self.name, objects)
+    async def save_objects(
+        self, objects: list[dict[str, Any]]
+    ) -> list[BatchResponse]:
+        return await self.algolia_client.save_objects(self._index_name, objects)
 
     async def delete_objects(self, objectids: list[str]) -> list[BatchResponse]:
-        return await self.algolia_client.delete_objects(self.name, objectids)
+        return await self.algolia_client.delete_objects(self._index_name, objectids)
 
 
 class MockAlgoliaIndex(BaseAlgoliaIndex):
