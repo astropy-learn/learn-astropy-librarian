@@ -27,7 +27,7 @@ async def expire_old_records(
     filters = (
         f"root_url:{escape_facet_value(root_url)}"
         " AND NOT "
-        f"root_url:{escape_facet_value(root_url)}"
+        f"index_epoch:{escape_facet_value(index_epoch)}"
     )
 
     obj = BrowseParamsObject(
@@ -36,12 +36,12 @@ async def expire_old_records(
         attributes_to_highlight=[],
     )
     old_object_ids: List[str] = []
-    for r in await algolia_index.browse_objects(obj):
+    async for r in algolia_index.browse_objects(obj):
         # Double check that we're deleting the right things.
         if r["root_url"] != root_url:
-            logger.warning("root_url does not match: %s", r["baseUrl"])
+            logger.warning("root_url does not match: %s", r["root_url"])
             continue
-        if r["surrogateKey"] == index_epoch:
+        if r["index_epoch"] == index_epoch:
             logger.warning("index_epoch matches current epoch: %s", r["index_epoch"])
             continue
         old_object_ids.append(r["objectID"])
