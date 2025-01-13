@@ -8,7 +8,7 @@ import uuid
 from copy import deepcopy
 from types import TracebackType
 from typing import Any, AsyncIterator, Iterator, Type, Union
-from algoliasearch.search_client import SearchClient
+from algoliasearch.search.client import SearchClient
 from algoliasearch.search.models import BatchResponse, BrowseParamsObject, BrowseResponse, DeletedAtResponse
 
 
