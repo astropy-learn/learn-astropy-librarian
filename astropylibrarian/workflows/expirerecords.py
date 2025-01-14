@@ -38,12 +38,12 @@ async def expire_old_records(
     old_object_ids: List[str] = []
     for r in await algolia_index.browse_objects(obj):
         # Double check that we're deleting the right things.
-        if r["root_url"] != root_url:
-            logger.warning("root_url does not match: %s", r["root_url"])
-            continue
-        if r["index_epoch"] == index_epoch:
-            logger.warning("index_epoch matches current epoch: %s", r["index_epoch"])
-            continue
+        # if r["root_url"] != root_url:
+        #     logger.warning("root_url does not match: %s", r["root_url"])
+        #     continue
+        # if r["index_epoch"] == index_epoch:
+        #     logger.warning("index_epoch matches current epoch: %s", r["index_epoch"])
+        #     continue
         old_object_ids.append(r["objectID"])
 
     logger.info(
