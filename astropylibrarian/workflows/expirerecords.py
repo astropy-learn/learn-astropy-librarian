@@ -46,10 +46,10 @@ async def expire_old_records(
         if r.index_epoch == index_epoch:
             logger.warning("index_epoch matches current epoch: %s", r.index_epoch)
             continue
-        old_object_ids.append(r.objectID)
+        old_object_ids.append(r.object_id)
 
     logger.info(
-        "Collected %d old objectIDs for deletion, for %s",
+        "Collected %d old object_id for deletion, for %s",
         len(old_object_ids),
         root_url,
     )
