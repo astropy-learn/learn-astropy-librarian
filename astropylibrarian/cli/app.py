@@ -38,7 +38,7 @@ def main_callback(
     https://learn.astropy.org.
 
     Astropy Librarian is developed at
-    https://github.com/astropy/learn-astropy-librarian
+    https://github.com/astropy-learn/learn-astropy-librarian
     """
     if verbose == 0:
         logging_level = logging.WARN

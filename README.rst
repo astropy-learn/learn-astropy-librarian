@@ -16,7 +16,7 @@ Command line interface
       Astropy Librarian helps you work with the Algolia index that powers the
       content listing and search for Learn Astropy, https://learn.astropy.org.
 
-      Astropy Librarian is developed at https://github.com/astropy/learn-
+      Astropy Librarian is developed at https://github.com/astropy-learn/learn-
       astropy-librarian
 
     Options:
