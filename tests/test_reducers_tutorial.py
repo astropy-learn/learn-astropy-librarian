@@ -1,6 +1,5 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
-"""Tests for the astropylibrarian.reducers.tutorial module.
-"""
+"""Tests for the astropylibrarian.reducers.tutorial module."""
 
 from __future__ import annotations
 

@@ -62,7 +62,7 @@ class KeywordDb:
 
     @staticmethod
     def _load_keyword_table(
-        group: Sequence[Union[str, Dict[str, Sequence[str]]]]
+        group: Sequence[Union[str, Dict[str, Sequence[str]]]],
     ) -> KeywordTable:
         keywords: KeywordTable = {}
         for keyword_item in group:

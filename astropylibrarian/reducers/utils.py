@@ -1,6 +1,5 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
-"""Utilities for reducing HTML pages into search records.
-"""
+"""Utilities for reducing HTML pages into search records."""
 
 from __future__ import annotations
 
