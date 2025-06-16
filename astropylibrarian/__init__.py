@@ -6,7 +6,7 @@ search database.
 __all__ = ("__version__",)
 
 try:
-    from ._version import __version__ 
+    from ._version import __version__
 except ImportError:
     # package is not installed
     __version__ = ""

@@ -6,7 +6,10 @@ from typing import Any, AsyncIterator
 
 from algoliasearch.search.models.browse_params_object import BrowseParamsObject
 
-from astropylibrarian.algolia.client import AlgoliaIndexType, escape_facet_value
+from astropylibrarian.algolia.client import (
+    AlgoliaIndexType,
+    escape_facet_value,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +48,9 @@ async def search_for_records(
     logger.debug("Filter:\n%s", filters)
 
     obj = BrowseParamsObject(
-        filters=filters, attributes_to_retrieve=["root_url"], attributes_to_highlight=[]
+        filters=filters,
+        attributes_to_retrieve=["root_url"],
+        attributes_to_highlight=[],
     )
     async for result in algolia_index.browse_objects(obj):
         yield result
