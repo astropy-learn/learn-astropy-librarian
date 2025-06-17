@@ -48,8 +48,7 @@ def coordinates_transform_tutorial() -> HtmlTestData:
     """The Coordinates-Transform.html tutorial page."""
     return HtmlTestData.from_test_path(
         path="tutorials/Coordinates-Transform.html",
-        url="http://learn.astropy.org/rst-tutorials/"
-        "Coordinates-Transform.html",
+        url="http://learn.astropy.org/rst-tutorials/Coordinates-Transform.html",
     )
 
 
@@ -57,8 +56,8 @@ def coordinates_transform_tutorial() -> HtmlTestData:
 def nbcollection_coordinates_transform_tutorial() -> HtmlTestData:
     """The nbcollection-generated Coordinates-Transform.html tutorial page."""
     return HtmlTestData.from_test_path(
-        path="nbcollection-tutorials/2-Coordinates-Transforms.html",
-        url="http://learn.astropy.org/tutorials/2-Coordinates-Transforms.html",
+        path="nbcollection-tutorials/2_Coordinates-Transforms.html",
+        url="http://learn.astropy.org/tutorials/2_Coordinates-Transforms.html",
     )
 
 
@@ -68,8 +67,8 @@ def nbcollection_coordinates_transform_tutorial_2022_03() -> HtmlTestData:
     newly reformatted as of 2022-03.
     """
     return HtmlTestData.from_test_path(
-        path="nbcollection-tutorials/2-Coordinates-Transforms-2022-03.html",
-        url="http://learn.astropy.org/tutorials/2-Coordinates-Transforms.html",
+        path="nbcollection-tutorials/2_Coordinates-Transforms-2022-03.html",
+        url="http://learn.astropy.org/tutorials/2_Coordinates-Transforms.html",
     )
 
 
@@ -82,8 +81,7 @@ def ccd_guide_index() -> HtmlTestData:
     """
     return HtmlTestData.from_test_path(
         path="ccd-guide/index.html",
-        url="http://www.astropy.org/ccd-reduction-and-photometry-guide/"
-        "index.html",
+        url="http://www.astropy.org/ccd-reduction-and-photometry-guide/index.html",
     )
 
 
