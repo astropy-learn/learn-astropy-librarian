@@ -39,7 +39,7 @@ async def expire_old_records(
     # for r in await algolia_index.browse_objects(obj).hits:
     # records = await algolia_index.browse_objects(obj).hits
     response = await algolia_index.browse_objects(obj)
-    records = response.get("hits")
+    records = response.hits
     for r in records:
         # Double check that we're deleting the right things.
         if r.root_url != root_url:
