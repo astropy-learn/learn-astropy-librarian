@@ -54,15 +54,13 @@ class KeywordDb:
 
         keyword_groups: Dict[str, KeywordTable] = {}
         for group_name in db:
-            keyword_groups[group_name] = cls._load_keyword_table(
-                db[group_name]
-            )
+            keyword_groups[group_name] = cls._load_keyword_table(db[group_name])
 
         return cls(**keyword_groups)
 
     @staticmethod
     def _load_keyword_table(
-        group: Sequence[Union[str, Dict[str, Sequence[str]]]]
+        group: Sequence[Union[str, Dict[str, Sequence[str]]]],
     ) -> KeywordTable:
         keywords: KeywordTable = {}
         for keyword_item in group:

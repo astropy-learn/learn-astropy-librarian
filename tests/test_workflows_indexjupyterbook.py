@@ -26,15 +26,13 @@ from .conftest import HtmlTestData
         ),
         (
             "ccd-guide/index.html",
-            "https://www.astropy.org/ccd-reduction-and-photometry-guide/"
-            "index.html",
+            "https://www.astropy.org/ccd-reduction-and-photometry-guide/index.html",
             "https://www.astropy.org/ccd-reduction-and-photometry-guide/"
             "notebooks/00-00-Preface.html",
         ),
         (
             "ccd-guide/notebooks/00-00-Preface.html",
-            "https://www.astropy.org/ccd-reduction-and-photometry-guide/"
-            "index.html",
+            "https://www.astropy.org/ccd-reduction-and-photometry-guide/index.html",
             None,
         ),
     ],
@@ -55,8 +53,7 @@ def test_extract_homepage_metadata(ccd_guide_00_00: HtmlTestData) -> None:
     )
     assert md.title == "CCD Data Reduction Guide"
     assert md.logo_url == (
-        "http://www.astropy.org/ccd-reduction-and-photometry-guide/"
-        "_static/logo.png"
+        "http://www.astropy.org/ccd-reduction-and-photometry-guide/_static/logo.png"
     )
     assert md.description == (
         "The purpose of this text is to walk through image reduction and "

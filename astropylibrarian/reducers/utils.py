@@ -1,6 +1,5 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
-"""Utilities for reducing HTML pages into search records.
-"""
+"""Utilities for reducing HTML pages into search records."""
 
 from __future__ import annotations
 
@@ -145,9 +144,7 @@ def iter_sphinx_sections(
                 logger.debug("Could not get content from %s", content_element)
                 continue
 
-    yield Section(
-        content="\n\n".join(text_elements), headings=current_headers, url=url
-    )
+    yield Section(content="\n\n".join(text_elements), headings=current_headers, url=url)
 
 
 def iter_nbcollection_sections(
@@ -204,9 +201,7 @@ def iter_nbcollection_sections(
             if "id" in content_element.attrib.keys():
                 header_id = content_element.attrib["id"]
             if header_callback:
-                header_content = header_callback(
-                    content_element.text_content()
-                )
+                header_content = header_callback(content_element.text_content())
             else:
                 header_content = content_element.text_content()
             logger.debug("Got header %s\n", header_content)

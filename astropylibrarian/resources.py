@@ -39,9 +39,7 @@ class HtmlPage:
         return lxml.html.document_fromstring(self.html)
 
     @classmethod
-    def from_path(
-        cls: Type[HtmlPageType], *, path: Path, url: str
-    ) -> HtmlPageType:
+    def from_path(cls: Type[HtmlPageType], *, path: Path, url: str) -> HtmlPageType:
         """Open an HtmlPage from a local file.
 
         Parameters

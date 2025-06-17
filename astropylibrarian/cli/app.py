@@ -12,9 +12,7 @@ from astropylibrarian.algolia.client import AlgoliaIndex
 from astropylibrarian.cli import index
 from astropylibrarian.workflows.deleterooturl import delete_root_url
 
-app = typer.Typer(
-    short_help="Manage the content indexed by the Learn Astropy project."
-)
+app = typer.Typer(short_help="Manage the content indexed by the Learn Astropy project.")
 app.add_typer(index.app, name="index")
 
 
@@ -29,7 +27,7 @@ def main_callback(
             "Verbose output. Use -v for info-type logging and -vv for "
             "debug-level logging."
         ),
-    )
+    ),
 ) -> None:
     """Manage the content index for the Learn Astropy project.
 
@@ -49,16 +47,12 @@ def main_callback(
 
     if logging_level == logging.DEBUG:
         # Include the module name in the logging for easier debugging
-        log_format = (
-            "%(asctime)s %(levelname)8s %(name)s:%(lineno)d | %(message)s"
-        )
+        log_format = "%(asctime)s %(levelname)8s %(name)s:%(lineno)d | %(message)s"
     else:
         log_format = "%(levelname)s: %(message)s"
 
     handler = logging.StreamHandler()
-    handler.setFormatter(
-        logging.Formatter(log_format, datefmt="%Y-%m-%d:%H:%M:%S")
-    )
+    handler.setFormatter(logging.Formatter(log_format, datefmt="%Y-%m-%d:%H:%M:%S"))
     logger = logging.getLogger("astropylibrarian")
     logger.addHandler(handler)
     logger.setLevel(logging_level)
@@ -67,9 +61,7 @@ def main_callback(
 @app.command()
 def delete(
     url: str = typer.Argument(..., help="Root URL to delete"),
-    algolia_id: str = typer.Option(
-        ..., help="Algolia app ID.", envvar="ALGOLIA_ID"
-    ),
+    algolia_id: str = typer.Option(..., help="Algolia app ID.", envvar="ALGOLIA_ID"),
     algolia_key: str = typer.Option(
         ...,
         help="Algolia API key.",

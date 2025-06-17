@@ -1,6 +1,5 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
-"""Tests for the astropylibrarian.reducers.utils module.
-"""
+"""Tests for the astropylibrarian.reducers.utils module."""
 
 from __future__ import annotations
 
@@ -35,18 +34,14 @@ def test_iter_sphinx_sections(color_excess_tutorial: HtmlTestData) -> None:
     assert len(sections) == 5
 
     assert sections[0].headings == [
-        "Analyzing interstellar reddening and calculating synthetic "
-        "photometry",
+        "Analyzing interstellar reddening and calculating synthetic photometry",
         "Learning Goals",
     ]
     assert sections[0].header_level == 2
     assert sections[0].url == (
-        "http://learn.astropy.org/rst-tutorials/color-excess.html"
-        "#learning-goals"
+        "http://learn.astropy.org/rst-tutorials/color-excess.html#learning-goals"
     )
-    assert sections[0].content.startswith(
-        "Investigate extinction curve shapes"
-    )
+    assert sections[0].content.startswith("Investigate extinction curve shapes")
 
     assert sections[1].headings[-1] == "Keywords"
     assert sections[1].header_level == 2
@@ -65,8 +60,7 @@ def test_iter_sphinx_sections(color_excess_tutorial: HtmlTestData) -> None:
     )
 
     assert sections[4].headings[-1] == (
-        "Analyzing interstellar reddening and calculating synthetic "
-        "photometry"
+        "Analyzing interstellar reddening and calculating synthetic photometry"
     )
     assert sections[4].header_level == 1
 
@@ -86,36 +80,31 @@ def test_iter_sphinx_sections(color_excess_tutorial: HtmlTestData) -> None:
 
     assert sections[5].header_level == 2
     assert sections[5].headings == [
-        "Analyzing interstellar reddening and calculating synthetic "
-        "photometry",
+        "Analyzing interstellar reddening and calculating synthetic photometry",
         "Introduction",
     ]
 
     assert sections[6].header_level == 2
     assert sections[6].headings == [
-        "Analyzing interstellar reddening and calculating synthetic "
-        "photometry",
+        "Analyzing interstellar reddening and calculating synthetic photometry",
         "Example 1: Investigate Extinction Models",
     ]
 
     assert sections[7].header_level == 2
     assert sections[7].headings == [
-        "Analyzing interstellar reddening and calculating synthetic "
-        "photometry",
+        "Analyzing interstellar reddening and calculating synthetic photometry",
         "Example 2: Deredden a Spectrum",
     ]
 
     assert sections[8].header_level == 3
     assert sections[8].headings == [
-        "Analyzing interstellar reddening and calculating synthetic "
-        "photometry",
+        "Analyzing interstellar reddening and calculating synthetic photometry",
         "Example 3: Calculate Color Excess with synphot",
         "Exercise",
     ]
 
     assert sections[9].header_level == 2
     assert sections[9].headings == [
-        "Analyzing interstellar reddening and calculating synthetic "
-        "photometry",
+        "Analyzing interstellar reddening and calculating synthetic photometry",
         "Example 3: Calculate Color Excess with synphot",
     ]

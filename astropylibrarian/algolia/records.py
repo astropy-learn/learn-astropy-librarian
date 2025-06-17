@@ -55,9 +55,7 @@ class AlgoliaRecord(BaseModel):
     )
 
     root_summary: Optional[str] = Field(
-        description=(
-            "Short summary of the content corresponding to the root_url."
-        )
+        description=("Short summary of the content corresponding to the root_url.")
     )
 
     content_type: ContentType = Field(description="Content type.")
@@ -87,8 +85,7 @@ class AlgoliaRecord(BaseModel):
 
     base_url: HttpUrl = Field(
         description=(
-            "The base URL of the page, without fragments, parameters, "
-            "queries, etc."
+            "The base URL of the page, without fragments, parameters, queries, etc."
         ),
     )
 
@@ -140,9 +137,7 @@ class AlgoliaRecord(BaseModel):
         str
             The ``objectID`` for an Algolia record.
         """
-        url_component = b64encode(section.url.lower().encode("utf-8")).decode(
-            "utf-8"
-        )
+        url_component = b64encode(section.url.lower().encode("utf-8")).decode("utf-8")
         heading_component = b64encode(
             " ".join(section.headings).encode("utf-8")
         ).decode("utf-8")
@@ -235,9 +230,7 @@ class TutorialRecord(AlgoliaRecord):
         description="List of python package keywords.",
     )
 
-    task_keywords: Optional[List[str]] = Field(
-        description="List of task keywords."
-    )
+    task_keywords: Optional[List[str]] = Field(description="List of task keywords.")
 
     science_keywords: Optional[List[str]] = Field(
         description="List of science keywords."
@@ -307,16 +300,12 @@ class TutorialRecord(AlgoliaRecord):
             "python_package_keywords": keyworddb.filter_keywords(
                 tutorial.keywords, "python_package"
             ),
-            "task_keywords": keyworddb.filter_keywords(
-                tutorial.keywords, "task"
-            ),
-            "science_keywords": keyworddb.filter_keywords(
-                tutorial.keywords, "science"
-            ),
+            "task_keywords": keyworddb.filter_keywords(tutorial.keywords, "task"),
+            "science_keywords": keyworddb.filter_keywords(tutorial.keywords, "science"),
             "priority": priority,
         }
         for i, heading in enumerate(section.headings):
-            kwargs[f"h{i+1}"] = heading
+            kwargs[f"h{i + 1}"] = heading
         if tutorial.images:
             # TODO consider an explicitly set thumbnail from tutorial metadata
             kwargs["thumbnail_url"] = tutorial.images[0]
@@ -372,9 +361,7 @@ class GuideRecord(AlgoliaRecord):
         # The importance of 1 is reserved for the homepage URL so that the
         # homepage is featured in default listings. All other records have
         # importance bumped down lower.
-        if (page.url == site_metadata.homepage_url) and (
-            section.header_level == 1
-        ):
+        if (page.url == site_metadata.homepage_url) and (section.header_level == 1):
             importance = 1
         else:
             importance = section.header_level + 1
@@ -393,5 +380,5 @@ class GuideRecord(AlgoliaRecord):
             "priority": site_metadata.priority,
         }
         for i, heading in enumerate(section.headings):
-            kwargs[f"h{i+1}"] = heading
+            kwargs[f"h{i + 1}"] = heading
         return cls(**kwargs)

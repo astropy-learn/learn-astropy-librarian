@@ -38,7 +38,7 @@ async def expire_old_records(
     old_object_ids: List[str] = []
     # for r in await algolia_index.browse_objects(obj).hits:
     records = await algolia_index.browse_objects(obj).hits
-    for r in records:    
+    for r in records:
         # Double check that we're deleting the right things.
         if r.root_url != root_url:
             logger.warning("root_url does not match: %s", r.root_url)

@@ -23,9 +23,7 @@ app = typer.Typer(short_help="Content indexing commands.")
 @app.command()
 def tutorial(
     url: str = typer.Argument(..., help="URL or path for a tutorial."),
-    algolia_id: str = typer.Option(
-        ..., help="Algolia app ID.", envvar="ALGOLIA_ID"
-    ),
+    algolia_id: str = typer.Option(..., help="Algolia app ID.", envvar="ALGOLIA_ID"),
     algolia_key: str = typer.Option(
         ...,
         help="Algolia API key.",
@@ -61,13 +59,9 @@ def tutorial(
 
 @app.command("tutorial-site")
 def tutorial_site(
-    site_dir: Path = typer.Argument(
-        ..., help="Local path tutorial build directory"
-    ),
+    site_dir: Path = typer.Argument(..., help="Local path tutorial build directory"),
     url: str = typer.Argument(..., help="Base URL for tutorials."),
-    algolia_id: str = typer.Option(
-        ..., help="Algolia app ID.", envvar="ALGOLIA_ID"
-    ),
+    algolia_id: str = typer.Option(..., help="Algolia app ID.", envvar="ALGOLIA_ID"),
     algolia_key: str = typer.Option(
         ...,
         help="Algolia API key.",
@@ -179,9 +173,7 @@ async def run_index_tutorial(
 @app.command()
 def guide(
     url: str = typer.Argument(..., help="Root URL for a guide."),
-    algolia_id: str = typer.Option(
-        ..., help="Algolia app ID.", envvar="ALGOLIA_ID"
-    ),
+    algolia_id: str = typer.Option(..., help="Algolia app ID.", envvar="ALGOLIA_ID"),
     algolia_key: str = typer.Option(
         ...,
         help="Algolia API key.",

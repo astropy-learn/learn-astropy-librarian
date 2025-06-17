@@ -1,6 +1,5 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
-"""Workflow for downloading an HTML page.
-"""
+"""Workflow for downloading an HTML page."""
 
 __all__ = ["download_html"]
 
@@ -12,9 +11,7 @@ if TYPE_CHECKING:
     import aiohttp
 
 
-async def download_html(
-    *, url: str, http_client: "aiohttp.ClientSession"
-) -> HtmlPage:
+async def download_html(*, url: str, http_client: "aiohttp.ClientSession") -> HtmlPage:
     """Asynchronously download an HTML page (awaitable function).
 
     Parameters

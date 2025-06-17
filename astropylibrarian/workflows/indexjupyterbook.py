@@ -87,9 +87,7 @@ async def index_jupyterbook(
         _objectids = await result
         object_ids.extend(_objectids)
 
-    logger.info(
-        "Finished indexing JupyterBook %s (%d records)", url, len(object_ids)
-    )
+    logger.info("Finished indexing JupyterBook %s (%d records)", url, len(object_ids))
 
     if object_ids:
         await expire_old_records(
@@ -128,9 +126,7 @@ async def download_homepage(
         # Detect if the URL is a redirect to the true first content page
         redirect_url = detect_redirect(index_page)
         if isinstance(redirect_url, str):
-            return await download_html(
-                url=redirect_url, http_client=http_client
-            )
+            return await download_html(url=redirect_url, http_client=http_client)
     except Exception:
         pass
 

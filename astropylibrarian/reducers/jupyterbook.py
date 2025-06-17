@@ -224,9 +224,7 @@ class JupyterBookMetadata(BaseModel):
     def all_page_urls(self) -> List[str]:
         """The ``page_urls`` along with the ``homepage_url``."""
         return list(
-            set(
-                [str(url) for url in self.page_urls] + [str(self.homepage_url)]
-            )
+            set([str(url) for url in self.page_urls] + [str(self.homepage_url)])
         )
 
     @validator("root_url")

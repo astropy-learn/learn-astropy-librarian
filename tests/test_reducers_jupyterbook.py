@@ -54,7 +54,5 @@ def test_page_urls(ccd_guide_00_00: HtmlTestData) -> None:
         "08-03-Cosmic-ray-removal.html",
         "08-05-incorporating-masks-into-calibrated-science-images.html",
     ]
-    expected_urls = set(
-        [urljoin(page.html_page.url, p) for p in expected_paths]
-    )
+    expected_urls = set([urljoin(page.html_page.url, p) for p in expected_paths])
     assert expected_urls == page_urls

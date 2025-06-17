@@ -154,9 +154,7 @@ class ReducedTutorial:
             An object compatible with algolia search ``save_objects``-type
             methods.
         """
-        for record in self.iter_records(
-            index_epoch=index_epoch, priority=priority
-        ):
+        for record in self.iter_records(index_epoch=index_epoch, priority=priority):
             yield from record.export_capped_records_to_algolia()
 
     def _set_summary_on_h1_section(self) -> None:
@@ -186,9 +184,7 @@ class ReducedSphinxTutorial(ReducedTutorial):
             pass
 
         try:
-            authors_paragraph = doc.cssselect(
-                ".card section p, .card .section p"
-            )[0]
+            authors_paragraph = doc.cssselect(".card section p, .card .section p")[0]
             self._authors = self._parse_comma_list(authors_paragraph)
         except IndexError:
             pass
@@ -254,9 +250,7 @@ class ReducedNbcollectionTutorial(ReducedTutorial):
         doc = html_page.parse()
 
         try:
-            self._h1 = (
-                doc.cssselect("h1")[0].text_content().rstrip("¶").strip()
-            )
+            self._h1 = doc.cssselect("h1")[0].text_content().rstrip("¶").strip()
         except IndexError:
             logger.warning("Did not find h1")
             pass
