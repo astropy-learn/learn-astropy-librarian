@@ -33,11 +33,12 @@ logger = getLogger(__name__)
 
 def get_tutorial_reducer(html_page: HtmlPage) -> Type[ReducedTutorial]:
     """Get the reducer appropriate for the tutorial's structure."""
-    # doc = html_page.parse()
-    return ReducedNbcollectionTutorial
-    # if len(doc.cssselect(".jp-Notebook")) > 0:
-    #     logger.debug("Using nbcollection tutorial reducer")
-    #     return ReducedNbcollectionTutorial
+    logger.debug("Using jupyterbook tutorial reducer")
+    return ReducedJupyterBookTutorial
+    # doc = html_page.parse() # TODO
+    # if "tutorial--" in doc.cssselect("*")[0].text_content():
+    #     logger.debug("Using jupyterbook tutorial reducer")
+    #     return ReducedJupyterBookTutorial
     # else:
     #     logger.debug("Using sphinx tutorial reducer")
     #     return ReducedSphinxTutorial
@@ -182,24 +183,28 @@ class ReducedSphinxTutorial(ReducedTutorial):
         try:
             self._h1 = self._get_section_title(doc.cssselect("h1")[0])
         except IndexError:
+            logger.warning("Did not find h1")
             pass
 
         try:
             authors_paragraph = doc.cssselect(".card section p, .card .section p")[0]
             self._authors = self._parse_comma_list(authors_paragraph)
         except IndexError:
+            logger.warning("Did not find authors")
             pass
 
         try:
             keywords_paragraph = doc.cssselect("#keywords p")[0]
             self._keywords = self._parse_comma_list(keywords_paragraph)
         except IndexError:
+            logger.warning("Did not find keywords")
             pass
 
         try:
             summary_paragraph = doc.cssselect("#summary p")[0]
             self._summary = summary_paragraph.text_content().replace("\n", " ")
         except IndexError:
+            logger.warning("Did not find summary")
             pass
 
         image_elements = doc.cssselect(".card section img, .card .section img")
@@ -299,6 +304,89 @@ class ReducedNbcollectionTutorial(ReducedTutorial):
             else:
                 logger.debug("Ignored section")
         logger.debug("Found %s section in total", len(self._sections))
+
+
+class ReducedJupyterBookTutorial(ReducedTutorial):
+    """A reduced tutorial notebook that was published with
+    JupyterBook.
+    """
+
+    def process_html(self, html_page: HtmlPage) -> None:
+        """Process the HTML page."""
+        doc = html_page.parse()
+
+        try:
+            self._h1 = self._get_section_title(doc.cssselect("h1")[0])
+            logger.debug(f"Header:\n{self._h1}")
+        except IndexError:
+            logger.warning("Did not find h1")
+            pass
+
+        try:
+            authors_paragraph = doc.cssselect("#authors p")[0]
+            self._authors = self._parse_comma_list(authors_paragraph)
+            logger.debug(f"Authors:\n{self._authors}")
+        except IndexError:
+            logger.warning("Did not find authors")
+            pass
+
+        try:
+            keywords_paragraph = doc.cssselect("#keywords p")[0]
+            self._keywords = self._parse_comma_list(keywords_paragraph)
+            logger.debug(f"Keywords:\n{self._keywords}")
+        except IndexError:
+            logger.warning("Did not find keywords")
+            pass
+
+        try:
+            summary_paragraph = doc.cssselect("#summary p")[0]
+            self._summary = summary_paragraph.text_content().replace("\n", " ")
+            logger.debug(f"Summary:\n{self._summary}")
+        except IndexError:
+            logger.warning("Did not find summary")
+            pass
+
+        image_elements = doc.cssselect("img")
+        logger.debug(f"Found {len(image_elements)} image elements")
+        for image_element in image_elements:
+            img_src = image_element.attrib["src"]
+            if img_src.startswith("data:"):
+                # skip embedded images
+                continue
+            self._images.append(urljoin(self.url, img_src))
+
+        root_section = doc.cssselect("section")[0]
+        for s in iter_sphinx_sections(
+            base_url=self._url,
+            root_section=root_section,
+            headers=[],
+            header_callback=lambda x: x.rstrip("¶"),
+            content_callback=clean_content,
+        ):
+            if not self._is_ignored_section(s):
+                self._sections.append(s)
+
+        # Also look for additional h1 section on the page.
+        # Technically, the page should only have one h1, and all content
+        # should be subsections of that. In real life, though, it's easy
+        # to accidentally use additional h1 elements for subsections.
+        h1_heading = self._sections[-1].headings[-1]
+        for sibling in root_section.itersiblings(tag=("div", "section")):
+            if sibling.tag == "div" and "section" not in sibling.classes:
+                continue
+            for s in iter_sphinx_sections(
+                root_section=sibling,
+                base_url=self._url,
+                headers=[h1_heading],
+                header_callback=lambda x: x.rstrip("¶"),
+                content_callback=clean_content,
+            ):
+                if not self._is_ignored_section(s):
+                    self._sections.append(s)
+
+    @staticmethod
+    def _get_section_title(element: lxml.html.HtmlElement) -> str:
+        return element.text_content().rstrip("¶")
 
 
 def clean_content(x: str) -> str:
