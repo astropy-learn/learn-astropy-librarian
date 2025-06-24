@@ -33,13 +33,14 @@ logger = getLogger(__name__)
 
 def get_tutorial_reducer(html_page: HtmlPage) -> Type[ReducedTutorial]:
     """Get the reducer appropriate for the tutorial's structure."""
-    doc = html_page.parse()
-    if len(doc.cssselect(".jp-Notebook")) > 0:
-        logger.debug("Using nbcollection tutorial reducer")
-        return ReducedNbcollectionTutorial
-    else:
-        logger.debug("Using sphinx tutorial reducer")
-        return ReducedSphinxTutorial
+    # doc = html_page.parse()
+    return ReducedNbcollectionTutorial
+    # if len(doc.cssselect(".jp-Notebook")) > 0:
+    #     logger.debug("Using nbcollection tutorial reducer")
+    #     return ReducedNbcollectionTutorial
+    # else:
+    #     logger.debug("Using sphinx tutorial reducer")
+    #     return ReducedSphinxTutorial
 
 
 class ReducedTutorial:
