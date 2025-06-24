@@ -182,24 +182,28 @@ class ReducedSphinxTutorial(ReducedTutorial):
         try:
             self._h1 = self._get_section_title(doc.cssselect("h1")[0])
         except IndexError:
+            logger.warning("Did not find h1")
             pass
 
         try:
             authors_paragraph = doc.cssselect(".card section p, .card .section p")[0]
             self._authors = self._parse_comma_list(authors_paragraph)
         except IndexError:
+            logger.warning("Did not find authors")
             pass
 
         try:
             keywords_paragraph = doc.cssselect("#keywords p")[0]
             self._keywords = self._parse_comma_list(keywords_paragraph)
         except IndexError:
+            logger.warning("Did not find keywords")
             pass
 
         try:
             summary_paragraph = doc.cssselect("#summary p")[0]
             self._summary = summary_paragraph.text_content().replace("\n", " ")
         except IndexError:
+            logger.warning("Did not find summary")
             pass
 
         image_elements = doc.cssselect(".card section img, .card .section img")
