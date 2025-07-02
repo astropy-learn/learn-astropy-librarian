@@ -88,7 +88,7 @@ def test_tutorialsectionrecord(color_excess_tutorial: HtmlTestData) -> None:
         ],
         "h1": ("Analyzing interstellar reddening and calculating synthetic photometry"),
         "h2": "Learning Goals",
-        "thumbnail_url": ("http://learn.astropy.org/_images/color-excess_9_0.png"),
+        "thumbnail_url": ("http://learn.astropy.org/_images/color-excess_48_1.png"),
         "priority": 0,
     }
 
@@ -159,6 +159,6 @@ def test_guiderecord(
     assert isinstance(date_indexed, datetime.datetime)
     assert data["thumbnail_url"] == (
         "http://www.astropy.org/ccd-reduction-and-photometry-guide/_images/"
-        "01-05-Calibration-overview_6_1.png"
+        "01-05-Calibration-overview_24_0.png" 
     )
     assert data["priority"] == 1
