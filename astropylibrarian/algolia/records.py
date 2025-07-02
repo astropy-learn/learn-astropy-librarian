@@ -308,7 +308,8 @@ class TutorialRecord(AlgoliaRecord):
             kwargs[f"h{i + 1}"] = heading
         if tutorial.images:
             # TODO consider an explicitly set thumbnail from tutorial metadata
-            kwargs["thumbnail_url"] = tutorial.images[0]
+            # kwargs["thumbnail_url"] = tutorial.images[0] # with JupyterBook, this selects the sidebar logo
+            kwargs["thumbnail_url"] = tutorial.images[-1]
 
         return cls(**kwargs)
 
@@ -352,7 +353,8 @@ class GuideRecord(AlgoliaRecord):
         if page.image_urls:
             # TODO consider getting a thumbnail explicitly set form guide
             # metadata
-            thumbnail_url: Optional[str] = page.image_urls[0]
+            # thumbnail_url: Optional[str] = page.image_urls[0]
+            thumbnail_url: Optional[str] = page.image_urls[-1]
         elif site_metadata.logo_url:
             thumbnail_url = site_metadata.logo_url
         else:
