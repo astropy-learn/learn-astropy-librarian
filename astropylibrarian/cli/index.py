@@ -8,6 +8,7 @@ from pathlib import Path, PosixPath
 from typing import Awaitable, List, Optional
 
 import aiohttp
+import fnmatch
 import typer
 
 from astropylibrarian.algolia.client import AlgoliaIndex
@@ -125,6 +126,9 @@ async def run_index_tutorial_site(
             for html_path in html_paths:
                 relative_path = str(PosixPath(html_path.relative_to(site_dir)))
                 if relative_path in ignore_paths:
+                    continue
+                # allow wildcard matching with ignore_paths
+                if fnmatch.fnmatch(relative_path, ignore_paths):
                     continue
                 page_url = f"{root_url}/{relative_path}"
                 tasks.append(
