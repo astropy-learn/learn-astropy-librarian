@@ -159,6 +159,6 @@ def test_guiderecord(
     assert isinstance(date_indexed, datetime.datetime)
     assert data["thumbnail_url"] == (
         "http://www.astropy.org/ccd-reduction-and-photometry-guide/_images/"
-        "01-05-Calibration-overview_24_0.png" 
+        "01-05-Calibration-overview_24_0.png"
     )
     assert data["priority"] == 1
