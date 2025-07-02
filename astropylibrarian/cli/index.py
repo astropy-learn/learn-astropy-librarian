@@ -128,8 +128,9 @@ async def run_index_tutorial_site(
                 if relative_path in ignore_paths:
                     continue
                 # allow wildcard matching with ignore_paths
-                if fnmatch.fnmatch(relative_path, ignore_paths):
-                    continue
+                for pp in ignore_paths:
+                    if fnmatch.fnmatch(relative_path, pp):
+                        continue
                 page_url = f"{root_url}/{relative_path}"
                 tasks.append(
                     index_tutorial_from_path(
