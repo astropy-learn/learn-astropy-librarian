@@ -349,11 +349,14 @@ class ReducedJupyterBookTutorial(ReducedTutorial):
         image_elements = doc.cssselect("img")
         logger.debug(f"Found {len(image_elements)} image elements")
         for image_element in image_elements:
-            img_src = image_element.attrib["src"]
-            if img_src.startswith("data:"):
-                # skip embedded images
-                continue
-            self._images.append(urljoin(self.url, img_src))
+            img_src = image_element.attrib.get("src")
+            if img_src is not None:
+                if img_src.startswith("data:"):
+                    # skip embedded images
+                    continue
+                self._images.append(urljoin(self.url, img_src))
+            else:
+                logger.debug(f"Image element {image_element} missing attribute 'src'")
 
         root_section = doc.cssselect("section")[0]
         for s in iter_sphinx_sections(
