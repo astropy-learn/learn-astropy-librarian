@@ -183,28 +183,28 @@ class ReducedSphinxTutorial(ReducedTutorial):
         try:
             self._h1 = self._get_section_title(doc.cssselect("h1")[0])
         except IndexError:
-            logger.warning("Did not find h1")
+            logger.warning(f"{self._url}: Did not find h1")
             pass
 
         try:
             authors_paragraph = doc.cssselect(".card section p, .card .section p")[0]
             self._authors = self._parse_comma_list(authors_paragraph)
         except IndexError:
-            logger.warning("Did not find authors")
+            logger.warning(f"{self._url}: Did not find authors")
             pass
 
         try:
             keywords_paragraph = doc.cssselect("#keywords p")[0]
             self._keywords = self._parse_comma_list(keywords_paragraph)
         except IndexError:
-            logger.warning("Did not find keywords")
+            logger.warning(f"{self._url}: Did not find keywords")
             pass
 
         try:
             summary_paragraph = doc.cssselect("#summary p")[0]
             self._summary = summary_paragraph.text_content().replace("\n", " ")
         except IndexError:
-            logger.warning("Did not find summary")
+            logger.warning(f"{self._url}: Did not find summary")
             pass
 
         image_elements = doc.cssselect(".card section img, .card .section img")
@@ -258,28 +258,28 @@ class ReducedNbcollectionTutorial(ReducedTutorial):
         try:
             self._h1 = doc.cssselect("h1")[0].text_content().rstrip("¶").strip()
         except IndexError:
-            logger.warning("Did not find h1")
+            logger.warning(f"{self._url}: Did not find h1")
             pass
 
         try:
             authors_paragraph = doc.cssselect("#Authors + p")[0]
             self._authors = self._parse_comma_list(authors_paragraph)
         except IndexError:
-            logger.warning("Did not find authors")
+            logger.warning(f"{self._url}: Did not find authors")
             pass
 
         try:
             keywords_paragraph = doc.cssselect("#Keywords + p")[0]
             self._keywords = self._parse_comma_list(keywords_paragraph)
         except IndexError:
-            logger.warning("Did not find keywords")
+            logger.warning(f"{self._url}: Did not find keywords")
             pass
 
         try:
             summary_paragraph = doc.cssselect("#Summary + p")[0]
             self._summary = summary_paragraph.text_content().replace("\n", " ")
         except IndexError:
-            logger.warning("Did not find summary")
+            logger.warning(f"{self._url}: Did not find summary")
             pass
 
         image_elements = doc.cssselect("img")
@@ -319,7 +319,7 @@ class ReducedJupyterBookTutorial(ReducedTutorial):
             self._h1 = self._get_section_title(doc.cssselect("h1")[0])
             logger.debug(f"Header:\n{self._h1}")
         except IndexError:
-            logger.warning("Did not find h1")
+            logger.warning(f"{self._url}: Did not find h1")
             pass
 
         try:
@@ -327,7 +327,7 @@ class ReducedJupyterBookTutorial(ReducedTutorial):
             self._authors = self._parse_comma_list(authors_paragraph)
             logger.debug(f"Authors:\n{self._authors}")
         except IndexError:
-            logger.warning("Did not find authors")
+            logger.warning(f"{self._url}: Did not find authors")
             pass
 
         try:
@@ -335,7 +335,7 @@ class ReducedJupyterBookTutorial(ReducedTutorial):
             self._keywords = self._parse_comma_list(keywords_paragraph)
             logger.debug(f"Keywords:\n{self._keywords}")
         except IndexError:
-            logger.warning("Did not find keywords")
+            logger.warning(f"{self._url}: Did not find keywords")
             pass
 
         try:
@@ -343,7 +343,7 @@ class ReducedJupyterBookTutorial(ReducedTutorial):
             self._summary = summary_paragraph.text_content().replace("\n", " ")
             logger.debug(f"Summary:\n{self._summary}")
         except IndexError:
-            logger.warning("Did not find summary")
+            logger.warning(f"{self._url}: Did not find summary")
             pass
 
         image_elements = doc.cssselect("img")
