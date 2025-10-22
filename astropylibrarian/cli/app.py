@@ -93,3 +93,20 @@ async def run_delete(
         key=algolia_key, app_id=algolia_id, name=index
     ) as algolia_index:
         await delete_root_url(root_url=url, algolia_index=algolia_index)
+
+
+@app.command()
+async def clear_index(*, algolia_id: str, algolia_key: str, index: str) -> None:
+    """
+    Clear all records from an Algolia index without deleting the index itself.
+    This removes all records in the index but retains the index configuration.
+    """
+    typer.echo(f"Clearing records in Algolia index: {index}")
+    async with AlgoliaIndex(
+        key=algolia_key, app_id=algolia_id, name=index
+    ) as algolia_index:    
+        response = await algolia_index.clear_objects(index_name=index)
+    typer.echo(f"\tResponse: {response}")
+
+if __name__ == "__main__":
+    app()
