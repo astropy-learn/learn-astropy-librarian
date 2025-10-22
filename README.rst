@@ -115,6 +115,28 @@ astropylibrarian index guide
 
       --help              Show this message and exit.
 
+astropylibrarian clear-index
+----------------------------
+
+::
+
+    Usage: astropylibrarian clear-index [OPTIONS]
+
+      Clear all Algolia records in an index, without deleting the index. 
+      This functionality is also available through the Algolia dashboard.
+      It can be useful if new tutorials are not being indexed properly.
+
+    Arguments:
+      None
+
+    Options:
+      --algolia-id TEXT   Algolia app ID.  [env var: ALGOLIA_ID; required]
+      --algolia-key TEXT  Algolia API key.  [env var: ALGOLIA_KEY; required]
+      --index TEXT        Name of the Algolia index.  [env var: ALGOLIA_INDEX;
+                          required]
+
+      --help              Show this message and exit.
+
 astropylibrarian delete
 -----------------------
 
