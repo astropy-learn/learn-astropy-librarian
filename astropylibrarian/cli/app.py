@@ -96,17 +96,38 @@ async def run_delete(
 
 
 @app.command()
-async def clear_index(*, algolia_id: str, algolia_key: str, index: str) -> None:
+def clear_index(
+    algolia_id: str = typer.Option(..., help="Algolia app ID.", envvar="ALGOLIA_ID"),
+    algolia_key: str = typer.Option(
+        ...,
+        help="Algolia API key.",
+        envvar="ALGOLIA_KEY",
+        prompt=True,
+        confirmation_prompt=False,
+        hide_input=True,
+    ),
+    index: str = typer.Option(
+        ..., help="Name of the Algolia index.", envvar="ALGOLIA_INDEX"
+    ),
+) -> None:
     """
     Clear all records from an Algolia index without deleting the index itself.
     This removes all records in the index but retains the index configuration.
     """
-    typer.echo(f"Clearing records in Algolia index: {index}")
+    event_loop = asyncio.get_event_loop()
+    event_loop.run_until_complete(
+        run_clear_index(
+            algolia_id=algolia_id,
+            algolia_key=algolia_key,
+            index=index,
+        )
+    )
+
+async def run_clear_index(*, algolia_id: str, algolia_key: str, index: str) -> None:
     async with AlgoliaIndex(
         key=algolia_key, app_id=algolia_id, name=index
     ) as algolia_index:    
-        response = await algolia_index.clear_objects(index_name=index)
-    typer.echo(f"\tResponse: {response}")
+        await algolia_index.clear_objects()
 
 if __name__ == "__main__":
     app()
