@@ -95,7 +95,7 @@ async def run_delete(
         await delete_root_url(root_url=url, algolia_index=algolia_index)
 
 
-@app.command()
+@app.command("clear-index")
 def clear_index(
     algolia_id: str = typer.Option(..., help="Algolia app ID.", envvar="ALGOLIA_ID"),
     algolia_key: str = typer.Option(
