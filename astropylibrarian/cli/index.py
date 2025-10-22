@@ -56,6 +56,36 @@ def tutorial(
         )
     )
 
+async def run_index_tutorial(
+    *,
+    url: str,
+    algolia_id: str,
+    algolia_key: str,
+    index: str,
+    priority: int,
+    path: Optional[Path] = None,
+) -> None:
+    async with aiohttp.ClientSession() as http_client:
+        async with AlgoliaIndex(
+            key=algolia_key, app_id=algolia_id, name=index
+        ) as algolia_index:
+            if path:
+                await index_tutorial_from_path(
+                    path=path,
+                    url=url,
+                    http_client=http_client,
+                    algolia_index=algolia_index,
+                    priority=priority,
+                )
+            else:
+                await index_tutorial_from_url(
+                    url=url,
+                    http_client=http_client,
+                    algolia_index=algolia_index,
+                    priority=priority,
+                )
+
+
 
 @app.command("tutorial-site")
 def tutorial_site(
@@ -125,12 +155,17 @@ async def run_index_tutorial_site(
             key=algolia_key, app_id=algolia_id, name=index
         ) as algolia_index:
             site_dir.resolve()
-            html_paths = site_dir.glob("**/*.html")
+            html_paths = site_dir.glob("**/*.html")            
+            print(f"Tutorial paths: {html_paths}")
             tasks: List[Awaitable] = []
             for html_path in html_paths:
                 relative_path = str(PosixPath(html_path.relative_to(site_dir)))
                 if relative_path in ignore_paths:
                     continue
+                if "index-" in relative_path:
+                    priority = 1
+                else:
+                    priority = 0
                 page_url = f"{root_url}/{relative_path}"
                 tasks.append(
                     index_tutorial_from_path(
@@ -138,41 +173,10 @@ async def run_index_tutorial_site(
                         url=page_url,
                         http_client=http_client,
                         algolia_index=algolia_index,
-                        # hard-coded for now, will add a config system later
-                        priority=0,
+                        priority=priority,
                     )
                 )
             await asyncio.gather(*tasks)
-
-
-async def run_index_tutorial(
-    *,
-    url: str,
-    algolia_id: str,
-    algolia_key: str,
-    index: str,
-    priority: int,
-    path: Optional[Path] = None,
-) -> None:
-    async with aiohttp.ClientSession() as http_client:
-        async with AlgoliaIndex(
-            key=algolia_key, app_id=algolia_id, name=index
-        ) as algolia_index:
-            if path:
-                await index_tutorial_from_path(
-                    path=path,
-                    url=url,
-                    http_client=http_client,
-                    algolia_index=algolia_index,
-                    priority=priority,
-                )
-            else:
-                await index_tutorial_from_url(
-                    url=url,
-                    http_client=http_client,
-                    algolia_index=algolia_index,
-                    priority=priority,
-                )
 
 
 @app.command()
