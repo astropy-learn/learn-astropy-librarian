@@ -283,6 +283,14 @@ class TutorialRecord(AlgoliaRecord):
             A tutorial record, ready to index in Algolia.
         """
         base_url = cls.compute_base_url(tutorial=tutorial)
+        
+        if re.search(r'/\d+_', base_url) and (section.header_level == 1):
+            # catch tutorials belonging to series (their names begin with 1_, 2_, etc.),
+            # and bump importance to exclude these from default listings
+            importance = section.header_level + 1
+        else:
+            importance = section.header_level
+
         kwargs: Dict[str, Any] = {
             "objectID": cls.compute_object_id_for_section(section),
             "index_epoch": index_epoch,
@@ -291,7 +299,7 @@ class TutorialRecord(AlgoliaRecord):
             "root_title": tutorial.h1,
             "root_summary": tutorial.summary,
             "base_url": base_url,
-            "importance": section.header_level,
+            "importance": importance,
             "content": section.content,
             "authors": tutorial.authors,
             "astropy_package_keywords": keyworddb.filter_keywords(
