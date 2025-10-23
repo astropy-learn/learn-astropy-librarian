@@ -162,6 +162,7 @@ async def run_index_tutorial_site(
                 relative_path = str(PosixPath(html_path.relative_to(site_dir)))
                 if relative_path in ignore_paths:
                     continue
+                # make 'tutorial series' pages show up higher in search results
                 if "index-" in relative_path:
                     priority = 1
                 else:

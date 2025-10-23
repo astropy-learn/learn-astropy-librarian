@@ -11,6 +11,9 @@ from pydantic.v1 import BaseModel, HttpUrl, validator
 from astropylibrarian.algolia.records import GuideRecord
 from astropylibrarian.reducers.utils import iter_sphinx_sections
 
+from logging import getLogger
+logger = getLogger(__name__)
+
 if TYPE_CHECKING:
     import lxml.html
 
@@ -100,7 +103,34 @@ class JupyterBookPage:
             A section of the document, which includes its content, heading
             hierarchy and anchor link.
         """
-        root = self.doc.cssselect("#main-content .section")[0]
+        # Try multiple selectors to find the main content
+        selectors = [
+            "#main-content .section",
+            "#main-content",
+            ".main-content .section",
+            ".main-content",
+            "main .section",
+            "main",
+            ".section",
+            "article",
+        ]        
+        
+        # root = self.doc.cssselect("#main-content .section")[0]
+        root = None
+        for selector in selectors:
+            elements = self.doc.cssselect(selector)
+            if elements:
+                root = elements[0]
+                logger.debug(f"Found content using selector: {selector} for {self.html_page.url}")
+                break
+
+        if root is None:
+            logger.warning(
+                f"Could not find any content sections for {self.html_page.url}. "
+                f"Tried selectors: {selectors}. Skipping this page."
+            )
+            return
+    
         for section in iter_sphinx_sections(
             root_section=root,
             base_url=self.html_page.url,
