@@ -94,7 +94,7 @@ class AlgoliaIndex(BaseAlgoliaIndex):
         return await self.algolia_client.delete_objects(self.name, objectids)
 
     async def clear_objects(self) -> Any:
-        return await self.algolia_client.clear_objects(index_name=self.name)    
+        return await self.algolia_client.clear_objects(index_name=self.name)
 
 
 class MockAlgoliaIndex(BaseAlgoliaIndex):

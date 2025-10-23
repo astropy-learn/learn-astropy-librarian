@@ -123,11 +123,13 @@ def clear_index(
         )
     )
 
+
 async def run_clear_index(*, algolia_id: str, algolia_key: str, index: str) -> None:
     async with AlgoliaIndex(
         key=algolia_key, app_id=algolia_id, name=index
-    ) as algolia_index:    
+    ) as algolia_index:
         await algolia_index.clear_objects()
+
 
 if __name__ == "__main__":
     app()

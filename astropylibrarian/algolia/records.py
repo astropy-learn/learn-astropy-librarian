@@ -283,8 +283,8 @@ class TutorialRecord(AlgoliaRecord):
             A tutorial record, ready to index in Algolia.
         """
         base_url = cls.compute_base_url(tutorial=tutorial)
-        
-        if re.search(r'/\d+_', base_url):
+
+        if re.search(r"/\d+_", base_url):
             # catch tutorials belonging to series (their names begin with 1_, 2_, etc.),
             # and bump importance to place these at bottom of default listings
             # (on the landing page learn.astropy.org)

@@ -12,6 +12,7 @@ from astropylibrarian.algolia.records import GuideRecord
 from astropylibrarian.reducers.utils import iter_sphinx_sections
 
 from logging import getLogger
+
 logger = getLogger(__name__)
 
 if TYPE_CHECKING:
@@ -113,15 +114,17 @@ class JupyterBookPage:
             "main",
             ".section",
             "article",
-        ]        
-        
+        ]
+
         # root = self.doc.cssselect("#main-content .section")[0]
         root = None
         for selector in selectors:
             elements = self.doc.cssselect(selector)
             if elements:
                 root = elements[0]
-                logger.debug(f"Found content using selector: {selector} for {self.html_page.url}")
+                logger.debug(
+                    f"Found content using selector: {selector} for {self.html_page.url}"
+                )
                 break
 
         if root is None:
@@ -130,7 +133,7 @@ class JupyterBookPage:
                 f"Tried selectors: {selectors}. Skipping this page."
             )
             return
-    
+
         for section in iter_sphinx_sections(
             root_section=root,
             base_url=self.html_page.url,
