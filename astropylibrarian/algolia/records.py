@@ -286,7 +286,8 @@ class TutorialRecord(AlgoliaRecord):
         
         if re.search(r'/\d+_', base_url):
             # catch tutorials belonging to series (their names begin with 1_, 2_, etc.),
-            # and bump importance to exclude these from default listings
+            # and bump importance to place these at bottom of default listings
+            # (on the landing page learn.astropy.org)
             importance = section.header_level + 1
         else:
             importance = section.header_level
@@ -336,6 +337,8 @@ class TutorialRecord(AlgoliaRecord):
 
 class GuideRecord(AlgoliaRecord):
     """A Pydantic model of a "guide" content type record."""
+
+    h1: Optional[str] = Field(description="The title.", default=None)
 
     content_type: ContentType = Field(
         description="Content type.", default=ContentType.guide
