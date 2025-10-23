@@ -97,6 +97,7 @@ def iter_sphinx_sections(
     id_ = root_section.attrib["id"]
     url = f"{base_url}#{id_}"
     text_elements: List[str] = []
+    current_headers = headers  # Initialize with the provided headers
     for element in root_section:
         if element.tag in _HEADING_TAGS:
             current_header = element.text_content()
