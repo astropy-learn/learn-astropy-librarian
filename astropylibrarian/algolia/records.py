@@ -284,10 +284,10 @@ class TutorialRecord(AlgoliaRecord):
         """
         base_url = cls.compute_base_url(tutorial=tutorial)
         
-        if re.search(r'/\d+_', base_url) and (section.header_level == 1):
+        if re.search(r'/\d+_', base_url):
             # catch tutorials belonging to series (their names begin with 1_, 2_, etc.),
             # and bump importance to exclude these from default listings
-            importance = section.header_level + 1
+            importance = section.header_level + 10
         else:
             importance = section.header_level
 
