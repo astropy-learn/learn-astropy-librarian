@@ -155,8 +155,7 @@ async def run_index_tutorial_site(
             key=algolia_key, app_id=algolia_id, name=index
         ) as algolia_index:
             site_dir.resolve()
-            html_paths = site_dir.glob("**/*.html")            
-            print(f"Tutorial paths: {html_paths}")
+            html_paths = site_dir.glob("**/*.html")
             tasks: List[Awaitable] = []
             for html_path in html_paths:
                 relative_path = str(PosixPath(html_path.relative_to(site_dir)))
