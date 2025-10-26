@@ -124,6 +124,7 @@ async def index_tutorial_from_path(
        <https://www.algolia.com/doc/api-reference/api-methods/save-objects/>`_)
     """
     tutorial_html = HtmlPage.from_path(path=path, url=url)
+    print(f"Tutorial path {path}\nURL {url}")
     return await index_tutorial(
         tutorial_html=tutorial_html,
         algolia_index=algolia_index,
