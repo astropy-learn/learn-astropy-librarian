@@ -87,7 +87,6 @@ async def run_index_tutorial(
                 )
 
 
-
 @app.command("tutorial-site")
 def tutorial_site(
     site_dir: Path = typer.Argument(..., help="Local path tutorial build directory"),
