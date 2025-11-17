@@ -8,7 +8,7 @@ ci:
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.14.2"
+    rev: "v0.14.5"
     hooks:
       - id: ruff
         types_or: [python, pyi, jupyter]
@@ -31,7 +31,7 @@ repos:
         args: ["--maxkb=10000"]
 
   - repo: https://github.com/kynan/nbstripout
-    rev: 0.8.1
+    rev: 0.8.2
     hooks:
       - id: nbstripout
         args: ["--extra-keys=metadata.kernelspec metadata.language_info.version metadata.toc"]
