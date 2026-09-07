@@ -2,7 +2,8 @@
 """Workflow for deleting all Algolia records associated with a root URL."""
 
 import logging
-from typing import Any, AsyncIterator
+from collections.abc import AsyncIterator
+from typing import Any
 
 from algoliasearch.search.models.browse_params_object import BrowseParamsObject
 
