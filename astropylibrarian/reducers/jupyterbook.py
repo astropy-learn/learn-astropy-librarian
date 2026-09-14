@@ -3,15 +3,15 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Iterator, List, Optional
+from collections.abc import Iterator
+from logging import getLogger
+from typing import TYPE_CHECKING, Any
 from urllib.parse import urljoin, urlparse, urlunparse
 
 from pydantic.v1 import BaseModel, HttpUrl, validator
 
 from astropylibrarian.algolia.records import GuideRecord
 from astropylibrarian.reducers.utils import iter_sphinx_sections
-
-from logging import getLogger
 
 logger = getLogger(__name__)
 
@@ -38,7 +38,7 @@ class JupyterBookPage:
         return self.html_page.url
 
     @property
-    def title(self) -> Optional[str]:
+    def title(self) -> str | None:
         """The site's title (selector: ``#site-title``)."""
         try:
             element = self.doc.cssselect("#site-title")[0]
@@ -47,7 +47,7 @@ class JupyterBookPage:
         return element.text_content()
 
     @property
-    def logo_url(self) -> Optional[str]:
+    def logo_url(self) -> str | None:
         """The URL of the site's logo (selector: ``img.logo``)."""
         try:
             element = self.doc.cssselect("img.logo")[0]
@@ -56,7 +56,7 @@ class JupyterBookPage:
         return urljoin(self.html_page.url, element.attrib["src"])
 
     @property
-    def first_paragraph(self) -> Optional[str]:
+    def first_paragraph(self) -> str | None:
         """The content of the first paragraph within the main content
         (``#main-content``).
         """
@@ -68,7 +68,7 @@ class JupyterBookPage:
         return self._clean_content(content)
 
     @property
-    def github_repository(self) -> Optional[str]:
+    def github_repository(self) -> str | None:
         """The GitHub repository URL, detected in the ``<nav>`` element."""
         elements = self.doc.cssselect("nav a.external")
         for element in elements:
@@ -79,7 +79,7 @@ class JupyterBookPage:
         return None
 
     @property
-    def page_urls(self) -> List[str]:
+    def page_urls(self) -> list[str]:
         """URLs of all pages in a JupyterBook, selected from the ``<nav>``
         with ID ``bd-docs-nav``.
         """
@@ -90,7 +90,7 @@ class JupyterBookPage:
         ]
 
     @property
-    def image_urls(self) -> List[str]:
+    def image_urls(self) -> list[str]:
         """URLs to images in the main content area."""
         images = self.doc.cssselect("#main-content img")
         return [urljoin(self.url, img.attrib["src"]) for img in images]
@@ -175,7 +175,7 @@ class JupyterBookPage:
 
     def iter_algolia_objects(
         self, *, site_metadata: JupyterBookMetadata, index_epoch: str
-    ) -> Iterator[Dict[str, Any]]:
+    ) -> Iterator[dict[str, Any]]:
         """Iterate over all objects that are extractable from the page in
         a format ready to use with the algoliasearch client.
 
@@ -237,7 +237,7 @@ class JupyterBookMetadata(BaseModel):
     This string is unformatted (no HTML formatting).
     """
 
-    source_repository: Optional[HttpUrl]
+    source_repository: HttpUrl | None
     """The URL of the book's source repository (i.e. GitHub repository)."""
 
     homepage_url: HttpUrl
@@ -247,14 +247,14 @@ class JupyterBookMetadata(BaseModel):
     homepage_url.
     """
 
-    page_urls: List[HttpUrl]
+    page_urls: list[HttpUrl]
     """URLs of pages in the JupyterBook."""
 
     priority: int
     """A priority level that elevates a guide in the UI's default sorting."""
 
     @property
-    def all_page_urls(self) -> List[str]:
+    def all_page_urls(self) -> list[str]:
         """The ``page_urls`` along with the ``homepage_url``."""
         return list(
             set([str(url) for url in self.page_urls] + [str(self.homepage_url)])

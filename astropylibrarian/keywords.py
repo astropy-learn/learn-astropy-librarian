@@ -1,12 +1,12 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 """Standardized Learn Astropy keywords."""
 
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Dict, List, Optional, Sequence, Union
 
 import yaml
 
-KeywordTable = Dict[str, List[str]]
+KeywordTable = dict[str, list[str]]
 """Keyword table data type.
 
 The canonical keyword is the key, and alternative forms are strings in the
@@ -33,7 +33,7 @@ class KeywordDb:
         self._keyword_groups = kwargs
 
     @classmethod
-    def load(cls, path: Optional[Path] = None) -> "KeywordDb":
+    def load(cls, path: Path | None = None) -> "KeywordDb":
         """Load a KeywordDB from a YAML file.
 
         Parameters
@@ -52,7 +52,7 @@ class KeywordDb:
 
         db = yaml.safe_load(path.read_text())
 
-        keyword_groups: Dict[str, KeywordTable] = {}
+        keyword_groups: dict[str, KeywordTable] = {}
         for group_name in db:
             keyword_groups[group_name] = cls._load_keyword_table(db[group_name])
 
@@ -60,7 +60,7 @@ class KeywordDb:
 
     @staticmethod
     def _load_keyword_table(
-        group: Sequence[Union[str, Dict[str, Sequence[str]]]],
+        group: Sequence[str | dict[str, Sequence[str]]],
     ) -> KeywordTable:
         keywords: KeywordTable = {}
         for keyword_item in group:
@@ -74,8 +74,8 @@ class KeywordDb:
         return keywords
 
     def filter_keywords(
-        self, input_keywords: List[str], keyword_group: str
-    ) -> List[str]:
+        self, input_keywords: list[str], keyword_group: str
+    ) -> list[str]:
         """Filter keywords for a specific group.
 
         Parameters
@@ -104,7 +104,7 @@ class KeywordDb:
         # Normalize the input keywords
         input_keywords = [k.lower().strip() for k in input_keywords]
 
-        output_keywords: List[str] = []
+        output_keywords: list[str] = []
 
         for input_keyword in input_keywords:
             if input_keyword in table.keys():
