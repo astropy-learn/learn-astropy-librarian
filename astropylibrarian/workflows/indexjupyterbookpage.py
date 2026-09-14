@@ -6,7 +6,7 @@ from __future__ import annotations
 __all__ = ["index_jupyterbook_page"]
 
 import logging
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from astropylibrarian.reducers.jupyterbook import JupyterBookPage
 from astropylibrarian.workflows.download import download_html
@@ -27,7 +27,7 @@ async def index_jupyterbook_page(
     http_client: aiohttp.ClientSession,
     algolia_index: AlgoliaIndexType,
     index_epoch: str,
-) -> List[str]:
+) -> list[str]:
     """Ingest a page from a JupyterBook site."""
     html_page = await download_html(url=url, http_client=http_client)
     logger.debug("Downloaded %s", url)

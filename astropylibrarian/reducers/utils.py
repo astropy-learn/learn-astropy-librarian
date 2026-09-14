@@ -4,14 +4,15 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable, Generator
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Callable, Generator, List, Optional
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import lxml.html
 
-__all__ = ["Section", "iter_sphinx_sections", "iter_nbcollection_sections"]
+__all__ = ["Section", "iter_nbcollection_sections", "iter_sphinx_sections"]
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ class Section:
     """The plain-text content of the section.
     """
 
-    headings: List[str]
+    headings: list[str]
     """The section headers, ordered by hierarchy.
 
     The header of the present section is the last element.
@@ -56,11 +57,11 @@ class Section:
 
 def iter_sphinx_sections(
     *,
-    root_section: "lxml.html.HtmlElement",
+    root_section: lxml.html.HtmlElement,
     base_url: str,
-    headers: List[str],
-    header_callback: Optional[Callable[[str], str]] = None,
-    content_callback: Optional[Callable[[str], str]] = None,
+    headers: list[str],
+    header_callback: Callable[[str], str] | None = None,
+    content_callback: Callable[[str], str] | None = None,
 ) -> Generator[Section, None, None]:
     """Iterate through the hierarchical sections in a root HTML element,
     yielding the content between that section header and the next section
@@ -96,7 +97,7 @@ def iter_sphinx_sections(
     """
     id_ = root_section.attrib["id"]
     url = f"{base_url}#{id_}"
-    text_elements: List[str] = []
+    text_elements: list[str] = []
     current_headers = headers  # Initialize with the provided headers
     for element in root_section:
         if element.tag in _HEADING_TAGS:
@@ -150,10 +151,10 @@ def iter_sphinx_sections(
 
 def iter_nbcollection_sections(
     *,
-    root_element: "lxml.html.HtmlElement",
+    root_element: lxml.html.HtmlElement,
     base_url: str,
-    header_callback: Optional[Callable[[str], str]] = None,
-    content_callback: Optional[Callable[[str], str]] = None,
+    header_callback: Callable[[str], str] | None = None,
+    content_callback: Callable[[str], str] | None = None,
 ) -> Generator[Section, None, None]:
     """Iterate through the hierarchical sections of a nbcollection-generated
     tutorial page
@@ -231,8 +232,8 @@ def iter_nbcollection_content_elements(
     *,
     root_element: lxml.html.HtmlElement,
     base_url: str,
-    header_callback: Optional[Callable[[str], str]] = None,
-    content_callback: Optional[Callable[[str], str]] = None,
+    header_callback: Callable[[str], str] | None = None,
+    content_callback: Callable[[str], str] | None = None,
 ) -> Generator[lxml.html.HtmlElement, None, None]:
     """Iterate through the content elements in an nbcollection-generated
     HTML document.
