@@ -4,8 +4,8 @@
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Awaitable
 from pathlib import Path, PosixPath
-from typing import Awaitable, List, Optional
 
 import aiohttp
 import typer
@@ -39,7 +39,7 @@ def tutorial(
         0,
         help="Priority for default sorting (higher numbers appear first)",
     ),
-    path: Optional[Path] = typer.Option(
+    path: Path | None = typer.Option(
         None, help="Local path of tutorial HTML, if available."
     ),
 ) -> None:
@@ -64,27 +64,27 @@ async def run_index_tutorial(
     algolia_key: str,
     index: str,
     priority: int,
-    path: Optional[Path] = None,
+    path: Path | None = None,
 ) -> None:
-    async with aiohttp.ClientSession() as http_client:
-        async with AlgoliaIndex(
-            key=algolia_key, app_id=algolia_id, name=index
-        ) as algolia_index:
-            if path:
-                await index_tutorial_from_path(
-                    path=path,
-                    url=url,
-                    http_client=http_client,
-                    algolia_index=algolia_index,
-                    priority=priority,
-                )
-            else:
-                await index_tutorial_from_url(
-                    url=url,
-                    http_client=http_client,
-                    algolia_index=algolia_index,
-                    priority=priority,
-                )
+    async with (
+        aiohttp.ClientSession() as http_client,
+        AlgoliaIndex(key=algolia_key, app_id=algolia_id, name=index) as algolia_index,
+    ):
+        if path:
+            await index_tutorial_from_path(
+                path=path,
+                url=url,
+                http_client=http_client,
+                algolia_index=algolia_index,
+                priority=priority,
+            )
+        else:
+            await index_tutorial_from_url(
+                url=url,
+                http_client=http_client,
+                algolia_index=algolia_index,
+                priority=priority,
+            )
 
 
 @app.command("tutorial-site")
@@ -103,7 +103,7 @@ def tutorial_site(
     index: str = typer.Option(
         ..., help="Name of the Algolia index.", envvar="ALGOLIA_INDEX"
     ),
-    ignore: List[str] = typer.Option(
+    ignore: list[str] = typer.Option(
         lambda: [
             "index.html",
             "_static/webpack-macros.html",
@@ -144,39 +144,39 @@ async def run_index_tutorial_site(
     algolia_id: str,
     algolia_key: str,
     index: str,
-    ignore_paths: List[str],
+    ignore_paths: list[str],
 ) -> None:
     # For consistency when building page urls
     if root_url.endswith("/"):
         root_url.rstrip("/")
 
-    async with aiohttp.ClientSession() as http_client:
-        async with AlgoliaIndex(
-            key=algolia_key, app_id=algolia_id, name=index
-        ) as algolia_index:
-            site_dir.resolve()
-            html_paths = site_dir.glob("**/*.html")
-            tasks: List[Awaitable] = []
-            for html_path in html_paths:
-                relative_path = str(PosixPath(html_path.relative_to(site_dir)))
-                if relative_path in ignore_paths:
-                    continue
-                # make 'tutorial series' pages show up higher in search results
-                if "index-" in relative_path:
-                    priority = 1
-                else:
-                    priority = 0
-                page_url = f"{root_url}/{relative_path}"
-                tasks.append(
-                    index_tutorial_from_path(
-                        path=html_path,
-                        url=page_url,
-                        http_client=http_client,
-                        algolia_index=algolia_index,
-                        priority=priority,
-                    )
+    async with (
+        aiohttp.ClientSession() as http_client,
+        AlgoliaIndex(key=algolia_key, app_id=algolia_id, name=index) as algolia_index,
+    ):
+        site_dir.resolve()
+        html_paths = site_dir.glob("**/*.html")
+        tasks: list[Awaitable] = []
+        for html_path in html_paths:
+            relative_path = str(PosixPath(html_path.relative_to(site_dir)))
+            if relative_path in ignore_paths:
+                continue
+            # make 'tutorial series' pages show up higher in search results
+            if "index-" in relative_path:
+                priority = 1
+            else:
+                priority = 0
+            page_url = f"{root_url}/{relative_path}"
+            tasks.append(
+                index_tutorial_from_path(
+                    path=html_path,
+                    url=page_url,
+                    http_client=http_client,
+                    algolia_index=algolia_index,
+                    priority=priority,
                 )
-            await asyncio.gather(*tasks)
+            )
+        await asyncio.gather(*tasks)
 
 
 @app.command()
@@ -215,13 +215,13 @@ def guide(
 async def run_index_guide(
     *, url: str, algolia_id: str, algolia_key: str, index: str, priority: int
 ) -> None:
-    async with aiohttp.ClientSession() as http_client:
-        async with AlgoliaIndex(
-            key=algolia_key, app_id=algolia_id, name=index
-        ) as algolia_index:
-            await index_jupyterbook(
-                url=url,
-                http_client=http_client,
-                algolia_index=algolia_index,
-                priority=priority,
-            )
+    async with (
+        aiohttp.ClientSession() as http_client,
+        AlgoliaIndex(key=algolia_key, app_id=algolia_id, name=index) as algolia_index,
+    ):
+        await index_jupyterbook(
+            url=url,
+            http_client=http_client,
+            algolia_index=algolia_index,
+            priority=priority,
+        )
