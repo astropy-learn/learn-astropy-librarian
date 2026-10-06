@@ -12,7 +12,7 @@ __all__ = ["index_jupyterbook"]
 import asyncio
 import logging
 import re
-from typing import TYPE_CHECKING, List, Union
+from typing import TYPE_CHECKING
 from urllib.parse import urljoin
 
 from astropylibrarian.algolia.client import generate_index_epoch
@@ -41,7 +41,7 @@ async def index_jupyterbook(
     http_client: aiohttp.ClientSession,
     algolia_index: AlgoliaIndexType,
     priority: int,
-) -> List[str]:
+) -> list[str]:
     """Ingest a Jupyter Book site as a Learn Astropy Guide.
 
     Parameters
@@ -82,7 +82,7 @@ async def index_jupyterbook(
         )
         for url in page_urls
     ]
-    object_ids: List[str] = []
+    object_ids: list[str] = []
     for result in asyncio.as_completed(tasks):
         _objectids = await result
         object_ids.extend(_objectids)
@@ -100,7 +100,7 @@ async def index_jupyterbook(
 
 
 async def download_homepage(
-    *, url: str, http_client: "aiohttp.ClientSession"
+    *, url: str, http_client: aiohttp.ClientSession
 ) -> HtmlPage:
     """Download the HTML for the Jupyter Book's homepage, given the root
     URL
@@ -133,7 +133,7 @@ async def download_homepage(
     return index_page
 
 
-def detect_redirect(html_page: HtmlPage) -> Union[None, str]:
+def detect_redirect(html_page: HtmlPage) -> None | str:
     """Detect if the page is actually an immediate redirect to another page
     via an "http-equiv=Refresh" meta tag.
 

@@ -3,9 +3,10 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Mapping, Optional, Type, TypeVar
+from typing import Any, Self, TypeVar
 
 import lxml.html
 
@@ -26,7 +27,7 @@ class HtmlPage:
     This URL is considered to be the "canonical URL."
     """
 
-    request_url: Optional[str] = None
+    request_url: str | None = None
     """The URL that was originally requested to obtain this page, which might
     be different than the ``url`` if the server redirected.
     """
@@ -39,7 +40,7 @@ class HtmlPage:
         return lxml.html.document_fromstring(self.html)
 
     @classmethod
-    def from_path(cls: Type[HtmlPageType], *, path: Path, url: str) -> HtmlPageType:
+    def from_path(cls, *, path: Path, url: str) -> Self:
         """Open an HtmlPage from a local file.
 
         Parameters
