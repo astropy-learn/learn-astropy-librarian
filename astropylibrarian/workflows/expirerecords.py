@@ -11,8 +11,6 @@ from algoliasearch.search.models.browse_params_object import BrowseParamsObject
 from astropylibrarian.algolia.client import escape_facet_value
 
 if TYPE_CHECKING:
-    from typing import List
-
     from astropylibrarian.algolia.client import AlgoliaIndexType
 
 __all__ = ["expire_old_records"]
@@ -22,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 async def expire_old_records(
     *, algolia_index: AlgoliaIndexType, root_url: str, index_epoch: str
-) -> List[str]:
+) -> list[str]:
     """Expire records for a root_url that do not match the index_epoch."""
     filters = (
         f"root_url:{escape_facet_value(root_url)}"
@@ -35,7 +33,7 @@ async def expire_old_records(
         attributes_to_retrieve=["root_url", "index_epoch"],
         attributes_to_highlight=[],
     )
-    old_object_ids: List[str] = []
+    old_object_ids: list[str] = []
     # for r in await algolia_index.browse_objects(obj).hits:
     # records = await algolia_index.browse_objects(obj).hits
     response = await algolia_index.browse_objects(obj)
