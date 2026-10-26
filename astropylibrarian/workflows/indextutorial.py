@@ -4,14 +4,14 @@
 from __future__ import annotations
 
 __all__ = [
-    "index_tutorial_from_url",
-    "index_tutorial_from_path",
     "index_tutorial",
+    "index_tutorial_from_path",
+    "index_tutorial_from_url",
 ]
 
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from algoliasearch.http.exceptions import RequestException
 
@@ -35,7 +35,7 @@ async def index_tutorial_from_url(
     http_client: aiohttp.ClientSession,
     algolia_index: AlgoliaIndexType,
     priority: int,
-) -> List[str]:
+) -> list[str]:
     """Asynchronously save records for a tutorial located at a URL to Algolia
     (awaitable function).
 
@@ -87,7 +87,7 @@ async def index_tutorial_from_path(
     http_client: aiohttp.ClientSession,
     algolia_index: AlgoliaIndexType,
     priority: int,
-) -> List[str]:
+) -> list[str]:
     """Asynchronously save records for a tutorial located at a local path to
     Algolia (awaitable function).
 
@@ -134,7 +134,7 @@ async def index_tutorial_from_path(
 
 async def index_tutorial(
     *, tutorial_html: HtmlPage, algolia_index: AlgoliaIndexType, priority: int
-) -> List[str]:
+) -> list[str]:
     """Index a tutorial given a pre-loaded HTML document.
 
     Parameters
@@ -169,7 +169,7 @@ async def index_tutorial(
         tutorial_html.url,
     )
 
-    saved_object_ids: List[str] = []
+    saved_object_ids: list[str] = []
     try:
         response = await algolia_index.save_objects(objects=records)
     except RequestException as e:
