@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-__all__ = ["ContentType", "AlgoliaRecord", "TutorialRecord", "GuideRecord"]
+__all__ = ["AlgoliaRecord", "ContentType", "GuideRecord", "TutorialRecord"]
 
 import copy
 import datetime
@@ -11,8 +11,9 @@ import json
 import math
 import re
 from base64 import b64encode
+from collections.abc import Iterator
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Dict, Iterator, List, Optional
+from typing import TYPE_CHECKING, Any
 from urllib.parse import urlparse, urlunparse
 
 from more_itertools import chunked
@@ -54,7 +55,7 @@ class AlgoliaRecord(BaseModel):
         )
     )
 
-    root_summary: Optional[str] = Field(
+    root_summary: str | None = Field(
         description=("Short summary of the content corresponding to the root_url.")
     )
 
@@ -91,15 +92,15 @@ class AlgoliaRecord(BaseModel):
 
     h1: str = Field(description="The title.")
 
-    h2: Optional[str] = Field(description="The second-level heading.")
+    h2: str | None = Field(description="The second-level heading.")
 
-    h3: Optional[str] = Field(description="The third-level heading.")
+    h3: str | None = Field(description="The third-level heading.")
 
-    h4: Optional[str] = Field(description="The fourth-level heading.")
+    h4: str | None = Field(description="The fourth-level heading.")
 
-    h5: Optional[str] = Field(description="The fifth-level heading.")
+    h5: str | None = Field(description="The fifth-level heading.")
 
-    h6: Optional[str] = Field(description="The sixth-level heading.")
+    h6: str | None = Field(description="The sixth-level heading.")
 
     importance: int = Field(
         description="The importance of the record, corresponding to the "
@@ -113,7 +114,7 @@ class AlgoliaRecord(BaseModel):
         default_factory=datetime.datetime.utcnow,
     )
 
-    thumbnail_url: Optional[HttpUrl] = Field(
+    thumbnail_url: HttpUrl | None = Field(
         description="URL of an image to use as a thumbnail.",
     )
 
@@ -143,7 +144,7 @@ class AlgoliaRecord(BaseModel):
         ).decode("utf-8")
         return f"{url_component}-{heading_component}"
 
-    def export_to_algolia(self) -> Dict[str, Any]:
+    def export_to_algolia(self) -> dict[str, Any]:
         """Export this model into an object that can be uploaded with the
         Algolia client.
 
@@ -164,7 +165,7 @@ class AlgoliaRecord(BaseModel):
 
     def export_capped_records_to_algolia(
         self, max_size: int = 9500
-    ) -> Iterator[Dict[str, Any]]:
+    ) -> Iterator[dict[str, Any]]:
         """Yield objects for upload to Algolia from this record that each
         fit within the Algolia size cap for an individual record.
 
@@ -200,14 +201,14 @@ class AlgoliaRecord(BaseModel):
                 sub_record.objectID = f"{self.objectID}-{i}"
                 yield sub_record.export_to_algolia()
 
-    def split(self, number: int) -> List[AlgoliaRecord]:
+    def split(self, number: int) -> list[AlgoliaRecord]:
         """Split a record in a given number of parts; evenly distributing
         the content between parts.
         """
         p = re.compile(r"\. ")
         content_chunks = p.split(self.content)
         part_size = math.floor(len(content_chunks) / number)
-        split_records: List[AlgoliaRecord] = []
+        split_records: list[AlgoliaRecord] = []
         for i, chunk in enumerate(chunked(content_chunks, part_size), 1):
             new_record = copy.deepcopy(self)
             new_record.content = ". ".join(chunk)
@@ -220,28 +221,26 @@ class AlgoliaRecord(BaseModel):
 class TutorialRecord(AlgoliaRecord):
     """A Pydantic model for a "tutorial" content type record."""
 
-    authors: Optional[List[str]] = Field(description="List of author names.")
+    authors: list[str] | None = Field(description="List of author names.")
 
-    astropy_package_keywords: Optional[List[str]] = Field(
+    astropy_package_keywords: list[str] | None = Field(
         description="List of astropy package keywords.",
     )
 
-    python_package_keywords: Optional[List[str]] = Field(
+    python_package_keywords: list[str] | None = Field(
         description="List of python package keywords.",
     )
 
-    task_keywords: Optional[List[str]] = Field(description="List of task keywords.")
+    task_keywords: list[str] | None = Field(description="List of task keywords.")
 
-    science_keywords: Optional[List[str]] = Field(
-        description="List of science keywords."
-    )
+    science_keywords: list[str] | None = Field(description="List of science keywords.")
 
     content_type: ContentType = Field(
         description="Content type.", default=ContentType.tutorial
     )
 
     @validator("content_type")
-    def validate_content_type(cls, v: Optional[str]) -> str:
+    def validate_content_type(cls, v: str | None) -> str:
         if v is None:
             return ContentType.tutorial
         elif v != ContentType.tutorial:
@@ -292,7 +291,7 @@ class TutorialRecord(AlgoliaRecord):
         else:
             importance = section.header_level
 
-        kwargs: Dict[str, Any] = {
+        kwargs: dict[str, Any] = {
             "objectID": cls.compute_object_id_for_section(section),
             "index_epoch": index_epoch,
             "url": section.url,
@@ -338,14 +337,14 @@ class TutorialRecord(AlgoliaRecord):
 class GuideRecord(AlgoliaRecord):
     """A Pydantic model of a "guide" content type record."""
 
-    h1: Optional[str] = Field(description="The title.", default=None)
+    h1: str | None = Field(description="The title.", default=None)
 
     content_type: ContentType = Field(
         description="Content type.", default=ContentType.guide
     )
 
     @validator("content_type")
-    def validate_content_type(cls, v: Optional[str]) -> str:
+    def validate_content_type(cls, v: str | None) -> str:
         if v is None:
             return ContentType.guide
         elif v != ContentType.guide:
@@ -365,7 +364,7 @@ class GuideRecord(AlgoliaRecord):
             # TODO consider getting a thumbnail explicitly set form guide
             # metadata
             # thumbnail_url: Optional[str] = page.image_urls[0]
-            thumbnail_url: Optional[str] = page.image_urls[-1]
+            thumbnail_url: str | None = page.image_urls[-1]
         elif site_metadata.logo_url:
             thumbnail_url = site_metadata.logo_url
         else:
@@ -379,7 +378,7 @@ class GuideRecord(AlgoliaRecord):
         else:
             importance = section.header_level + 1
 
-        kwargs: Dict[str, Any] = {
+        kwargs: dict[str, Any] = {
             "objectID": cls.compute_object_id_for_section(section),
             "index_epoch": index_epoch,
             "url": section.url,

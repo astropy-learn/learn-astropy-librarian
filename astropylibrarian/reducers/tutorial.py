@@ -5,8 +5,9 @@ into search records.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from logging import getLogger
-from typing import TYPE_CHECKING, Any, Dict, Iterator, List, Type
+from typing import TYPE_CHECKING, Any
 from urllib.parse import urljoin
 
 from astropylibrarian.algolia.records import TutorialRecord
@@ -23,15 +24,15 @@ if TYPE_CHECKING:
     from astropylibrarian.resources import HtmlPage
 
 __all__ = [
-    "ReducedTutorial",
-    "ReducedSphinxTutorial",
     "ReducedNbcollectionTutorial",
+    "ReducedSphinxTutorial",
+    "ReducedTutorial",
 ]
 
 logger = getLogger(__name__)
 
 
-def get_tutorial_reducer(html_page: HtmlPage) -> Type[ReducedTutorial]:
+def get_tutorial_reducer(html_page: HtmlPage) -> type[ReducedTutorial]:
     """Get the reducer appropriate for the tutorial's structure."""
     logger.debug("Using jupyterbook tutorial reducer")
     return ReducedJupyterBookTutorial
@@ -65,12 +66,12 @@ class ReducedTutorial:
         return self._h1
 
     @property
-    def authors(self) -> List[str]:
+    def authors(self) -> list[str]:
         """The names of authors declared by the tutorial page."""
         return self._authors
 
     @property
-    def keywords(self) -> List[str]:
+    def keywords(self) -> list[str]:
         """The keywords declared by the tutorial page."""
         return self._keywords
 
@@ -80,12 +81,12 @@ class ReducedTutorial:
         return self._summary
 
     @property
-    def images(self) -> List[str]:
+    def images(self) -> list[str]:
         """The URLs of images in the tutorial content."""
         return self._images
 
     @property
-    def sections(self) -> List[Section]:
+    def sections(self) -> list[Section]:
         """The sections (`astropylibrarian.reducers.utils.Section`) that
         are found within the content.
         """
@@ -94,11 +95,11 @@ class ReducedTutorial:
     def __init__(self, *, html_page: HtmlPage) -> None:
         self._url = html_page.url
         self._h1: str = ""
-        self._authors: List[str] = []
-        self._keywords: List[str] = []
+        self._authors: list[str] = []
+        self._keywords: list[str] = []
         self._summary = ""
-        self._images: List[str] = []
-        self._sections: List["Section"] = []
+        self._images: list[str] = []
+        self._sections: list[Section] = []
 
         # These are headings for sections that should be ignored because
         # they're part of the metadata.
@@ -146,7 +147,7 @@ class ReducedTutorial:
 
     def iter_algolia_objects(
         self, *, index_epoch: str, priority: int
-    ) -> Iterator[Dict[str, Any]]:
+    ) -> Iterator[dict[str, Any]]:
         """Iterate over all objects that are extractable from the tutorial in
         a format ready to use with the algoliasearch client.
 
@@ -168,7 +169,7 @@ class ReducedTutorial:
                 section.content = self.summary
 
     @staticmethod
-    def _parse_comma_list(element: lxml.html.HtmlElement) -> List[str]:
+    def _parse_comma_list(element: lxml.html.HtmlElement) -> list[str]:
         content = element.text_content()
         return [s.strip() for s in content.split(",")]
 
@@ -184,28 +185,24 @@ class ReducedSphinxTutorial(ReducedTutorial):
             self._h1 = self._get_section_title(doc.cssselect("h1")[0])
         except IndexError:
             logger.warning(f"{self._url}: Did not find h1")
-            pass
 
         try:
             authors_paragraph = doc.cssselect(".card section p, .card .section p")[0]
             self._authors = self._parse_comma_list(authors_paragraph)
         except IndexError:
             logger.warning(f"{self._url}: Did not find authors")
-            pass
 
         try:
             keywords_paragraph = doc.cssselect("#keywords p")[0]
             self._keywords = self._parse_comma_list(keywords_paragraph)
         except IndexError:
             logger.warning(f"{self._url}: Did not find keywords")
-            pass
 
         try:
             summary_paragraph = doc.cssselect("#summary p")[0]
             self._summary = summary_paragraph.text_content().replace("\n", " ")
         except IndexError:
             logger.warning(f"{self._url}: Did not find summary")
-            pass
 
         image_elements = doc.cssselect(".card section img, .card .section img")
         for image_element in image_elements:
@@ -259,28 +256,24 @@ class ReducedNbcollectionTutorial(ReducedTutorial):
             self._h1 = doc.cssselect("h1")[0].text_content().rstrip("¶").strip()
         except IndexError:
             logger.warning(f"{self._url}: Did not find h1")
-            pass
 
         try:
             authors_paragraph = doc.cssselect("#Authors + p")[0]
             self._authors = self._parse_comma_list(authors_paragraph)
         except IndexError:
             logger.warning(f"{self._url}: Did not find authors")
-            pass
 
         try:
             keywords_paragraph = doc.cssselect("#Keywords + p")[0]
             self._keywords = self._parse_comma_list(keywords_paragraph)
         except IndexError:
             logger.warning(f"{self._url}: Did not find keywords")
-            pass
 
         try:
             summary_paragraph = doc.cssselect("#Summary + p")[0]
             self._summary = summary_paragraph.text_content().replace("\n", " ")
         except IndexError:
             logger.warning(f"{self._url}: Did not find summary")
-            pass
 
         image_elements = doc.cssselect("img")
         for image_element in image_elements:
@@ -320,7 +313,6 @@ class ReducedJupyterBookTutorial(ReducedTutorial):
             logger.debug(f"Header:\n{self._h1}")
         except IndexError:
             logger.warning(f"{self._url}: Did not find h1")
-            pass
 
         try:
             authors_paragraph = doc.cssselect("#authors p")[0]
@@ -328,7 +320,6 @@ class ReducedJupyterBookTutorial(ReducedTutorial):
             logger.debug(f"Authors:\n{self._authors}")
         except IndexError:
             logger.warning(f"{self._url}: Did not find authors")
-            pass
 
         try:
             keywords_paragraph = doc.cssselect("#keywords p")[0]
@@ -336,7 +327,6 @@ class ReducedJupyterBookTutorial(ReducedTutorial):
             logger.debug(f"Keywords:\n{self._keywords}")
         except IndexError:
             logger.warning(f"{self._url}: Did not find keywords")
-            pass
 
         try:
             summary_paragraph = doc.cssselect("#summary p")[0]
@@ -344,7 +334,6 @@ class ReducedJupyterBookTutorial(ReducedTutorial):
             logger.debug(f"Summary:\n{self._summary}")
         except IndexError:
             logger.warning(f"{self._url}: Did not find summary")
-            pass
 
         image_elements = doc.cssselect("img")
         logger.debug(f"Found {len(image_elements)} image elements")
