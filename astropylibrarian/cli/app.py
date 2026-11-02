@@ -39,7 +39,7 @@ def main_callback(
     https://github.com/astropy-learn/learn-astropy-librarian
     """
     if verbose == 0:
-        logging_level = logging.WARN
+        logging_level = logging.WARNING
     elif verbose == 1:
         logging_level = logging.INFO
     else:

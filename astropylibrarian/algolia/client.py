@@ -5,9 +5,10 @@ dry-run operations.
 
 import logging
 import uuid
+from collections.abc import AsyncIterator, Iterator
 from copy import deepcopy
 from types import TracebackType
-from typing import Any, AsyncIterator, Iterator, Type, Union
+from typing import Any, Union
 
 from algoliasearch.search.client import SearchClient
 from algoliasearch.search.models.batch_response import BatchResponse
@@ -74,7 +75,7 @@ class AlgoliaIndex(BaseAlgoliaIndex):
 
     async def __aexit__(
         self,
-        exc_type: Type[BaseException] | None,
+        exc_type: type[BaseException] | None,
         exc: Exception | None,
         tb: TracebackType | None,
     ) -> None:
@@ -121,7 +122,7 @@ class MockAlgoliaIndex(BaseAlgoliaIndex):
 
     async def __aexit__(
         self,
-        exc_type: Type[BaseException] | None,
+        exc_type: type[BaseException] | None,
         exc: Exception | None,
         tb: TracebackType | None,
     ) -> None:
