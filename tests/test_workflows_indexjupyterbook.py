@@ -3,8 +3,6 @@
 
 from __future__ import annotations
 
-from typing import Union
-
 import pytest
 
 from astropylibrarian.workflows.indexjupyterbook import (
@@ -37,9 +35,7 @@ from .conftest import HtmlTestData
         ),
     ],
 )
-def test_detect_redirect(
-    html_path: str, base_url: str, expected: Union[None, str]
-) -> None:
+def test_detect_redirect(html_path: str, base_url: str, expected: None | str) -> None:
     html_page = HtmlTestData.from_test_path(path=html_path, url=base_url)
     assert expected == detect_redirect(html_page)
 
